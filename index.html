@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swift</title>
+    <link rel="stylesheet" href="kstyle.css">
+    <link rel="icon" type="image" href="789.png">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-shopping-bag"></i>
+                <img src="789.png">
+            </div>
+
+            <nav class="nav-links">
+                <a href="#" class="active">Home</a>
+                <a href="about.html">About</a>
+                <a href="service.html">Services</a>
+                <a href="contact.html">Contact</a>
+                <a href="login.html">Login</a>
+            </nav>
+
+            <div class="cart-icon" id="cartIcon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="home-img">
+        <img src="456.jpeg">
+        </div>
+        <div class="hero-content">
+            <h1>Welcome to D-Swift</h1>
+            <p>Discover the best deals on fashion, electronics, home goods and more. Shop with ease and convenience.</p>
+            <a href="#products" class="btn">Start Shopping</a>
+        </div>
+    </section>
+
+    
+    <!-- Main Content -->
+    <div class="container">
+        <h2 class="section-title">Shop by Category</h2>
+        <div class="categories">
+            <button class="category-btn active">All Products</button>
+            <button class="category-btn">Fashion</button>
+            <button class="category-btn">Electronics</button>
+            <button class="category-btn">Home Goods</button>
+        </div>
+        <h2 class="section-title" id="products">Featured Products</h2>
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be dynamically added here -->
+        </div>
+    </div>
+    <!-- Shopping Cart -->
+    <div class="cart-container" id="cartContainer">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button class="close-cart" id="closeCart">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be dynamically added here -->
+            <div class="cart-empty">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Your cart is empty</p>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="checkout-btn">Proceed to Checkout</button>
+        </div>
+    </div>
+    <!-- Overlay for cart -->
+    <div class="overlay" id="overlay"></div>
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Swift</h3>
+                <p>Your one-stop destination for all your shopping needs. Quality products at affordable prices.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="1.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="service.html">Service</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="#">FAQs</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Categories</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Fashion</a></li>
+                    <li><a href="#">Electronics</a></li>
+                    <li><a href="#">Home Goods</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contact Us</h3>
+                <ul class="footer-links">
+                    <li><i class="fas fa-map-marker-alt"></i>Ho, Volta Region</li>
+                    <li><i class="fas fa-phone"></i> +233 (53) 820-7600</li>
+                    <li><i class="fas fa-envelope"></i> dswift.ltd@gmail.com</li>
+                </ul>
+            </div>
+        </div>
+        <Marquee>If you found yourself on this website, it is not a mistake. You are here because you either want to buy or sell. My name is D-swift and I am here to make your shopping easier for you. Just tell me what you want and it will be at your doorstep. You can register now to receive daily update on new product. We offer services like advertisement of products, selling of products and other more. You can sign up now to be a buyer or a seller. For more enquiries, Call Us On +233 53-820-7600 or 0538207600. Thank You. Nice Shopping.</Marquee>
+        <div class="copyright">
+            <p>&copy; 2027 Swift. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="kscript.js"></script>
+</body>
+</html>
