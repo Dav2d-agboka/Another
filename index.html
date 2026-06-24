@@ -6,16 +6,16 @@
     <title>Swift</title>
     <link rel="stylesheet" href="kstyle.css">
     <link rel="icon" type="image" href="789.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Header -->
-    <header>
+
+    <!-- ══════════════ DESKTOP HEADER (hidden on mobile) ══════════════ -->
+    <header class="desktop-header">
         <div class="header-content">
             <div class="logo">
-                <i class="fas fa-shopping-bag"></i>
-                <img src="789.png">
+                <img src="789.png" alt="Swift">
             </div>
-
             <nav class="nav-links">
                 <a href="#" class="active">Home</a>
                 <a href="about.html">About</a>
@@ -23,7 +23,6 @@
                 <a href="contact.html">Contact</a>
                 <a href="login.html">Login</a>
             </nav>
-
             <div class="cart-icon" id="cartIcon">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="cart-count">0</span>
@@ -31,43 +30,104 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
+    <!-- ══════════════ MOBILE HEADER (hidden on desktop) ══════════════ -->
+    <div class="mobile-header">
+        <div class="mobile-search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search on Swift">
+        </div>
+        <div class="mobile-cart-icon" id="mobileCartIcon">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count mobile-cart-count">0</span>
+        </div>
+    </div>
+
+    <!-- ══════════════ DESKTOP HERO (hidden on mobile) ══════════════ -->
+    <section class="hero desktop-hero">
         <div class="home-img">
-        <img src="456.jpeg">
+            <img src="456.jpeg" alt="Hero">
         </div>
         <div class="hero-content">
             <h1>Welcome to D-Swift</h1>
-            <p>Discover the best deals on fashion, electronics, home goods and more. Shop with ease and convenience.</p>
+            <p>Discover the best deals on fashion, electronics, home goods and more.</p>
             <a href="#products" class="btn">Start Shopping</a>
         </div>
     </section>
 
-    
-    <!-- Main Content -->
-    <div class="container">
-        <h2 class="section-title">Shop by Category</h2>
-        <div class="categories">
-            <button class="category-btn active">All Products</button>
-            <button class="category-btn">Fashion</button>
-            <button class="category-btn">Electronics</button>
-            <button class="category-btn">Home Goods</button>
+    <!-- ══════════════ MOBILE BANNER SLIDER (hidden on desktop) ══════════════ -->
+    <div class="mobile-banner">
+        <div class="banner-slide active" style="background: linear-gradient(135deg, #ff6b6b, #ffd166);">
+            <div class="banner-text">
+                <p class="banner-tag">NEW ARRIVALS</p>
+                <h2>Shop Fashion</h2>
+                <p>Up to <strong>40% OFF</strong></p>
+                <a href="#products" class="banner-btn">Shop Now</a>
+            </div>
+            <div class="banner-img"><i class="fas fa-tshirt"></i></div>
         </div>
-        <h2 class="section-title" id="products">Featured Products</h2>
-        <div class="products-grid" id="productsGrid">
-            <!-- Products will be dynamically added here -->
+        <div class="banner-slide" style="background: linear-gradient(135deg, #4ecdc4, #1a1a2e);">
+            <div class="banner-text">
+                <p class="banner-tag">HOT DEALS</p>
+                <h2>Electronics</h2>
+                <p>Best prices <strong>guaranteed</strong></p>
+                <a href="#products" class="banner-btn">Shop Now</a>
+            </div>
+            <div class="banner-img"><i class="fas fa-laptop"></i></div>
+        </div>
+        <div class="banner-slide" style="background: linear-gradient(135deg, #ffd166, #ff6b6b);">
+            <div class="banner-text">
+                <p class="banner-tag">CLEARANCE</p>
+                <h2>Home Goods</h2>
+                <p>Starting from <strong>GH₵ 30</strong></p>
+                <a href="#products" class="banner-btn">Shop Now</a>
+            </div>
+            <div class="banner-img"><i class="fas fa-couch"></i></div>
+        </div>
+        <div class="banner-dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
         </div>
     </div>
-    <!-- Shopping Cart -->
+
+    <!-- ══════════════ MOBILE FLASH SALE BAR ══════════════ -->
+    <div class="flash-bar mobile-only">
+        <div class="flash-left">
+            <i class="fas fa-bolt"></i>
+            <span>Flash Sales</span>
+            <small id="flashTimer">06h : 00m : 00s</small>
+        </div>
+        <a href="#products" class="see-all">See All &rsaquo;</a>
+    </div>
+
+    <!-- ══════════════ SHARED MAIN CONTENT ══════════════ -->
+    <div class="container">
+        <!-- Desktop category heading -->
+        <h2 class="section-title desktop-only">Shop by Category</h2>
+
+        <!-- Category buttons -->
+        <div class="categories">
+            <button class="category-btn active" data-cat="all">All Products</button>
+            <button class="category-btn" data-cat="Fashion">Fashion</button>
+            <button class="category-btn" data-cat="Electronics">Electronics</button>
+            <button class="category-btn" data-cat="Beauty">Beauty</button>
+            <button class="category-btn" data-cat="Sports">Sports</button>
+            <button class="category-btn" data-cat="Home & Kitchen">Home & Kitchen</button>
+        </div>
+
+        <h2 class="section-title desktop-only" id="products">Featured Products</h2>
+        <h2 class="section-title mobile-only" id="products" style="font-size:1rem; margin:0.5rem 0 0.8rem; text-align:left;">Featured Products</h2>
+
+        <div class="products-grid" id="productsGrid"></div>
+    </div>
+
+    <!-- ══════════════ SHOPPING CART PANEL ══════════════ -->
     <div class="cart-container" id="cartContainer">
         <div class="cart-header">
             <h2>Your Cart</h2>
-            <button class="close-cart" id="closeCart">
-                <i class="fas fa-times"></i>
-            </button>
+            <button class="close-cart" id="closeCart"><i class="fas fa-times"></i></button>
         </div>
         <div class="cart-items" id="cartItems">
-            <!-- Cart items will be dynamically added here -->
             <div class="cart-empty">
                 <i class="fas fa-shopping-cart"></i>
                 <p>Your cart is empty</p>
@@ -76,34 +136,32 @@
         <div class="cart-footer">
             <div class="cart-total">
                 <span>Total:</span>
-                <span id="cartTotal">$0.00</span>
+                <span id="cartTotal">GH₵ 0.00</span>
             </div>
             <button class="checkout-btn">Proceed to Checkout</button>
         </div>
     </div>
-    <!-- Overlay for cart -->
     <div class="overlay" id="overlay"></div>
-    <!-- Footer -->
-    <footer>
+
+    <!-- ══════════════ DESKTOP FOOTER (hidden on mobile) ══════════════ -->
+    <footer class="desktop-footer">
         <div class="footer-content">
             <div class="footer-column">
                 <h3>Swift</h3>
-                <p>Your one-stop destination for all your shopping needs. Quality products at affordable prices.</p>
+                <p>Your one-stop destination for all your shopping needs.</p>
                 <div class="social-links">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
                     <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-pinterest"></i></a>
                 </div>
             </div>
             <div class="footer-column">
                 <h3>Quick Links</h3>
                 <ul class="footer-links">
-                    <li><a href="1.html">Home</a></li>
+                    <li><a href="index.html">Home</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="service.html">Service</a></li>
                     <li><a href="contact.html">Contact</a></li>
-                    <li><a href="#">FAQs</a></li>
                 </ul>
             </div>
             <div class="footer-column">
@@ -117,17 +175,41 @@
             <div class="footer-column">
                 <h3>Contact Us</h3>
                 <ul class="footer-links">
-                    <li><i class="fas fa-map-marker-alt"></i>Ho, Volta Region</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Ho, Volta Region</li>
                     <li><i class="fas fa-phone"></i> +233 (53) 820-7600</li>
                     <li><i class="fas fa-envelope"></i> dswift.ltd@gmail.com</li>
                 </ul>
             </div>
         </div>
-        <Marquee>If you found yourself on this website, it is not a mistake. You are here because you either want to buy or sell. My name is D-swift and I am here to make your shopping easier for you. Just tell me what you want and it will be at your doorstep. You can register now to receive daily update on new product. We offer services like advertisement of products, selling of products and other more. You can sign up now to be a buyer or a seller. For more enquiries, Call Us On +233 53-820-7600 or 0538207600. Thank You. Nice Shopping.</Marquee>
-        <div class="copyright">
-            <p>&copy; 2027 Swift. All rights reserved.</p>
-        </div>
+        <marquee>If you found yourself on this website, it is not a mistake. You are here because you either want to buy or sell. My name is D-swift and I am here to make your shopping easier. Call Us On +233 53-820-7600. Thank You. Nice Shopping.</marquee>
+        <div class="copyright"><p>&copy; 2027 Swift. All rights reserved.</p></div>
     </footer>
+
+    <!-- ══════════════ MOBILE BOTTOM NAV (hidden on desktop) ══════════════ -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="mob-nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="service.html" class="mob-nav-item">
+            <i class="fas fa-th-large"></i>
+            <span>Categories</span>
+        </a>
+        <a href="#" class="mob-nav-item" id="mobCartBtn">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Cart</span>
+            <span class="mob-nav-badge cart-count mobile-cart-count2">0</span>
+        </a>
+        <a href="#" class="mob-nav-item">
+            <i class="fas fa-heart"></i>
+            <span>Wishlist</span>
+        </a>
+        <a href="login.html" class="mob-nav-item">
+            <i class="fas fa-user"></i>
+            <span>Account</span>
+        </a>
+    </nav>
+
     <script src="kscript.js"></script>
 </body>
 </html>
