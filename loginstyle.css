@@ -1,14 +1,16 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: inherit; }
+*, *::before, *::after { margin:0; padding:0; box-sizing:inherit; }
+
 html {
     font-family: "Montserrat", sans-serif;
     height: 100%;
-    font-size: clamp(50%, 1.5vw, 65.2%);
+    font-size: 65.2%;
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
     font-weight: 400;
 }
+
 body {
     height: 100%;
     background: #e9ebee;
@@ -18,18 +20,26 @@ body {
     flex-direction: column;
     justify-content: center;
     perspective: 1500px;
-    padding: 1rem;
 }
-h1 { font-weight: 700; font-size: clamp(2rem, 5vw, 3.5em); text-align: center; }
+
+h1 { font-weight:700; font-size:3.5em; text-align:center; }
+
 form input {
     background: #eee;
     border: none;
-    padding: clamp(8px, 1.5vw, 12px) 15px;
+    padding: 12px 15px;
     margin: 8px 0;
     width: 100%;
-    font-size: clamp(1.1em, 2vw, 1.4em);
+    font-size: 1.4em;
 }
-span { color: #333; font-size: clamp(1.1em, 1.8vw, 1.4em); display: inline-block; margin: 15px auto; font-weight: 100; }
+
+span {
+    color: #333;
+    font-size: 1.4em;
+    display: inline-block;
+    margin: 15px auto;
+    font-weight: 100;
+}
 span.remember { float: left; }
 span.remember::before {
     content: "";
@@ -49,9 +59,18 @@ span.loginwith {
     justify-content: center;
     align-items: center;
 }
-span.loginwith::before { content: ""; display: inline-block; width: 42%; height: 1px; background: #aaa; vertical-align: middle; margin-right: 5%; }
-span.loginwith::after  { content: ""; display: inline-block; width: 45%; height: 1px; background: #aaa; vertical-align: middle; margin-left: 5%; }
-span.copy { display: block; position: absolute; bottom: 0; font-size: 1em; }
+span.loginwith::before {
+    content: ""; display: inline-block;
+    width: 42%; height: 1px; background: #aaa;
+    vertical-align: middle; margin-right: 5%;
+}
+span.loginwith::after {
+    content: ""; display: inline-block;
+    width: 45%; height: 1px; background: #aaa;
+    vertical-align: middle; margin-left: 5%;
+}
+span.copy { display:block; position:absolute; bottom:0; font-size:1em; }
+
 button {
     display: block;
     margin: 1em auto;
@@ -59,7 +78,7 @@ button {
     border: 1px solid #ff4b2b;
     background: #ff4b2b;
     color: #fff;
-    font-size: clamp(1.1em, 2vw, 1.5em);
+    font-size: 1.5em;
     font-weight: bold;
     padding: 0.8em 2em;
     letter-spacing: 1px;
@@ -71,10 +90,13 @@ button:hover { cursor: pointer; }
 button:active { transform: scale(0.95); }
 button:focus { outline: none; }
 
+/* ════════════════════════════════
+   DESKTOP LAYOUT  (>= 601px)
+════════════════════════════════ */
 #container {
     width: 95%;
     max-width: 800px;
-    height: clamp(420px, 60vw, 500px);
+    height: 500px;
     position: relative;
     border-radius: 20px;
     box-shadow: 0 14px 28px -10px rgba(0,0,0,0.1), 0 10px 10px -10px rgba(0,0,0,0.02);
@@ -83,7 +105,7 @@ button:focus { outline: none; }
 #container > div {
     position: absolute;
     width: 50%;
-    min-width: clamp(200px, 40vw, 350px);
+    min-width: 350px;
     height: 100%;
     top: 0;
     display: flex;
@@ -91,33 +113,158 @@ button:focus { outline: none; }
     align-items: center;
     justify-content: center;
 }
-.content { width: 100%; padding: clamp(1em, 3vw, 2em) clamp(1.5em, 5vw, 4em); text-align: center; }
-.content p { font-size: clamp(1.1em, 1.8vw, 1.4em); }
-.login { left: 0; background: #fafafa; border-radius: 20px 0 0 20px; }
-.login button { border-radius: 0; width: 100%; }
-.login i { margin: 1em; stroke: #999; font-size: clamp(14px, 2.5vw, 20px); }
-.register { right: 0; z-index: 1; border-radius: 0 20px 20px 0; background: #fafafa; }
-.register button { border-radius: 0; width: 100%; }
-.register i { margin: 1em; stroke: #999; font-size: clamp(14px, 2.5vw, 20px); }
-.page { right: 0; color: white; border-radius: 0 20px 20px 0; transform-origin: left center; transition: animation 1s linear; }
-.page button { border-color: #fff; background: transparent; }
-.page p { margin: 2em auto; }
-.front { background: linear-gradient(-25deg, #ffcf00 0%, #fc4f4f 100%) no-repeat 0 0/200%; z-index: 3; }
-.back  { background: linear-gradient(135deg, #fc4f4f 0%, #ffcf00 100%) no-repeat 0 0/200%; z-index: 2; }
-.back .content { transform: rotateY(180deg); }
-.active .front { animation: rot-front 0.6s ease-in-out normal forwards; }
-.active .back  { animation: rot-back  0.6s ease-in-out normal forwards; }
-.close .front  { animation: close-rot-front 0.6s ease-in-out normal forwards; }
-.close .back   { animation: close-rot-back  0.6s ease-in-out normal forwards; }
-@keyframes rot-front       { from{transform:translateZ(2px) rotateY(0deg)}   to{transform:translateZ(1px) rotateY(-180deg)} }
+.content { width:100%; padding:2em 4em; text-align:center; }
+.content p { font-size:1.4em; }
+
+.login  { left:0; background:#fafafa; border-radius:20px 0 0 20px; }
+.login button { border-radius:0; width:100%; }
+.login i { margin:1em; font-size:20px; }
+
+.register { right:0; z-index:1; border-radius:0 20px 20px 0; background:#fafafa; }
+.register button { border-radius:0; width:100%; }
+.register i { margin:1em; font-size:20px; }
+
+.page { right:0; color:white; border-radius:0 20px 20px 0; transform-origin:left center; }
+.page button { border-color:#fff; background:transparent; }
+.page p { margin:2em auto; }
+
+.front { background:linear-gradient(-25deg,#ffcf00 0%,#fc4f4f 100%) no-repeat 0 0/200%; z-index:3; }
+.back  { background:linear-gradient(135deg,#fc4f4f 0%,#ffcf00 100%) no-repeat 0 0/200%; z-index:2; }
+.back .content { transform:rotateY(180deg); }
+
+/* flip animations */
+.active .front { animation:rot-front 0.6s ease-in-out forwards; }
+.active .back  { animation:rot-back  0.6s ease-in-out forwards; }
+.close  .front { animation:close-rot-front 0.6s ease-in-out forwards; }
+.close  .back  { animation:close-rot-back  0.6s ease-in-out forwards; }
+
+@keyframes rot-front       { from{transform:translateZ(2px) rotateY(0deg)}    to{transform:translateZ(1px) rotateY(-180deg)} }
 @keyframes close-rot-front { from{transform:translateZ(1px) rotateY(-180deg)} to{transform:translateZ(2px) rotateY(0deg)} }
-@keyframes rot-back        { from{transform:translateZ(1px) rotateY(0deg)}   to{transform:translateZ(2px) rotateY(-180deg)} }
+@keyframes rot-back        { from{transform:translateZ(1px) rotateY(0deg)}    to{transform:translateZ(2px) rotateY(-180deg)} }
 @keyframes close-rot-back  { from{transform:translateZ(2px) rotateY(-180deg)} to{transform:translateZ(1px) rotateY(0deg)} }
-.active .register .content { animation: show 0.7s ease-in-out normal forwards; }
-.close  .register .content { animation: hide 0.7s ease-in-out normal forwards; }
-.active .login    .content { animation: hide 0.7s ease-in-out normal forwards; }
-.close  .login    .content { animation: show 0.7s ease-in-out normal forwards; }
-@keyframes show { from{opacity:0;transform:scale(0.8)} to{opacity:0.99;transform:scale(0.99)} }
+
+.active .register .content { animation:show 0.7s ease-in-out forwards; }
+.close  .register .content { animation:hide 0.7s ease-in-out forwards; }
+.active .login    .content { animation:hide 0.7s ease-in-out forwards; }
+.close  .login    .content { animation:show 0.7s ease-in-out forwards; }
+
+@keyframes show { from{opacity:0;transform:scale(0.8)}    to{opacity:0.99;transform:scale(0.99)} }
 @keyframes hide { from{opacity:0.99;transform:scale(0.99)} to{opacity:0;transform:scale(0.8)} }
-.userIcon   { font-size: clamp(18px, 3vw, 25px); }
-.bracketIcon{ font-size: clamp(18px, 3vw, 25px); }
+
+.userIcon    { font-size:25px; }
+.bracketIcon { font-size:25px; }
+
+/* ════════════════════════════════
+   MOBILE LAYOUT  (<= 600px)
+   — replaces the side-by-side flip
+     with a simple tab switcher
+     using the same colors & style
+════════════════════════════════ */
+@media (max-width: 600px) {
+
+    body {
+        justify-content: flex-start;
+        padding: 0;
+        background: #e9ebee;
+        perspective: none;
+        min-height: 100vh;
+    }
+
+    /* Hide the desktop flip panels entirely */
+    #container {
+        all: unset;
+        display: block;
+        width: 100%;
+        min-height: 100vh;
+    }
+    #container > div {
+        all: unset;
+        display: none;          /* hidden by default; JS controls visibility */
+    }
+
+    /* ── Coloured top banner (replaces the flip page) ── */
+    .mob-banner {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 36px 24px 28px;
+        background: linear-gradient(-25deg, #ffcf00 0%, #fc4f4f 100%);
+        color: white;
+        text-align: center;
+        gap: 6px;
+    }
+    .mob-banner i    { font-size: 38px; margin-bottom: 8px; }
+    .mob-banner h1   { font-size: 2.6em; color: white; }
+    .mob-banner p    { font-size: 1.3em; opacity: 0.9; margin-top: 4px; }
+
+    /* ── Tab bar ── */
+    .mob-tabs {
+        display: flex !important;
+        background: white;
+        border-bottom: 2px solid #eee;
+    }
+    .mob-tab {
+        flex: 1;
+        padding: 14px 0;
+        text-align: center;
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #aaa;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        transition: all 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .mob-tab.active {
+        color: #ff4b2b;
+        border-bottom-color: #ff4b2b;
+    }
+
+    /* ── Login & Register panels — shown one at a time ── */
+    .login, .register {
+        display: none;
+        background: white;
+        border-radius: 0;
+        position: static;
+        width: 100%;
+        min-width: unset;
+        height: auto;
+        min-height: unset;
+    }
+    .login.mob-active, .register.mob-active {
+        display: block !important;
+    }
+
+    .content {
+        padding: 2em 2.4em;
+        text-align: center;
+    }
+    .content h1 { display: none; } /* title shown in banner instead */
+
+    form input {
+        font-size: 1.5em;
+        padding: 13px 15px;
+        border-radius: 8px;
+        background: #f2f2f2;
+    }
+
+    .login button, .register button {
+        border-radius: 40px;
+        width: 100%;
+        font-size: 1.5em;
+        padding: 0.75em 1em;
+    }
+
+    .login i, .register i {
+        font-size: 22px;
+        margin: 0.6em;
+    }
+
+    span { font-size: 1.3em; }
+    span.copy { position: static; display: block; margin-top: 1em; }
+
+    /* Hide desktop-only elements */
+    .page { display: none !important; }
+}
