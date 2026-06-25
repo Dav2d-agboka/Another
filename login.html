@@ -6,27 +6,9 @@
     <title>Swift — Login & Sign Up</title>
     <link rel="stylesheet" href="loginstyle.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-    <style>
-        .error-msg { color:#ff4b2b; font-size:1.2em; margin:4px 0; min-height:1.6em; display:block; text-align:center; }
-        .back-link  { display:block; text-align:center; margin-top:10px; font-size:1.2em; color:#888; }
-        .back-link a{ color:#ff4b2b; text-decoration:none; font-weight:600; }
-    </style>
 </head>
 <body>
 <div id="container">
-
-    <!-- ══ MOBILE BANNER (hidden on desktop via CSS) ══ -->
-    <div class="mob-banner" style="display:none;">
-        <i class="fas fa-shopping-bag"></i>
-        <h1 id="mobBannerTitle">Welcome Back!</h1>
-        <p id="mobBannerSub">Login to your Swift account</p>
-    </div>
-
-    <!-- ══ MOBILE TABS (hidden on desktop via CSS) ══ -->
-    <div class="mob-tabs" style="display:none;">
-        <div class="mob-tab active" id="tabLogin"    onclick="mobSwitch('login')">Log In</div>
-        <div class="mob-tab"        id="tabRegister" onclick="mobSwitch('register')">Sign Up</div>
-    </div>
 
     <!-- ══ LOGIN PANEL ══ -->
     <div class="login mob-active">
@@ -46,7 +28,8 @@
             <a href="#"><i class="fa-brands fa-twitter"></i></a>
             <a href="#"><i class="fa-brands fa-github"></i></a>
             <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
-            <span class="back-link"><a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home</a></span>
+            <div class="mob-switch-row">Don't have an account? <span onclick="mobSwitch('register')">Sign Up</span></div>
+            <div class="back-link"><a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home</a></div>
             <span class="copy">&copy; 2027 Swift</span>
         </div>
     </div>
@@ -88,7 +71,8 @@
                 <span id="regError" class="error-msg"></span>
                 <button id="registerBtn">Create Account</button>
             </form>
-            <span class="back-link"><a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home</a></span>
+            <div class="mob-switch-row">Already have an account? <span onclick="mobSwitch('login')">Log In</span></div>
+            <div class="back-link"><a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home</a></div>
         </div>
     </div>
 
@@ -96,30 +80,17 @@
 
 <script src="loginscript.js"></script>
 <script>
-    // ── Mobile tab switcher ──
     function mobSwitch(tab) {
         const loginPanel    = document.querySelector('.login');
         const registerPanel = document.querySelector('.register');
-        const tabLogin      = document.getElementById('tabLogin');
-        const tabRegister   = document.getElementById('tabRegister');
-        const bannerTitle   = document.getElementById('mobBannerTitle');
-        const bannerSub     = document.getElementById('mobBannerSub');
-
         if (tab === 'login') {
             loginPanel.classList.add('mob-active');
             registerPanel.classList.remove('mob-active');
-            tabLogin.classList.add('active');
-            tabRegister.classList.remove('active');
-            bannerTitle.textContent = 'Welcome Back!';
-            bannerSub.textContent   = 'Login to your Swift account';
         } else {
             registerPanel.classList.add('mob-active');
             loginPanel.classList.remove('mob-active');
-            tabRegister.classList.add('active');
-            tabLogin.classList.remove('active');
-            bannerTitle.textContent = 'Create Account';
-            bannerSub.textContent   = 'Join Swift and start shopping';
         }
+        window.scrollTo(0, 0);
     }
 </script>
 </html>
