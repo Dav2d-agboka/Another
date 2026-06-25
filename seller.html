@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Swift — Seller Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <style>
+        :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --dark: #1a1a2e;
+            --accent: #ffd166;
+            --green: #0ba87e;
+            --bg: #f0f2f5;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
+        body { background:var(--bg); min-height:100vh; padding-bottom:70px; }
+
+        /* TOP BAR */
+        .top-bar {
+            background: linear-gradient(135deg, var(--dark), #2d2d5e);
+            color:white; padding:14px 18px;
+            display:flex; align-items:center; justify-content:space-between;
+            position:sticky; top:0; z-index:100;
+            box-shadow:0 2px 10px rgba(0,0,0,0.2);
+        }
+        .top-bar-left { display:flex; align-items:center; gap:10px; }
+        .top-bar-left img { height:36px; border-radius:6px; }
+        .top-bar h2 { font-size:1rem; }
+        .top-bar small { font-size:0.75rem; opacity:0.75; display:block; }
+        .top-bar-right { display:flex; gap:12px; align-items:center; }
+        .top-bar a { color:white; font-size:1.2rem; text-decoration:none; }
+
+        /* STATS CARDS */
+        .stats-grid {
+            display:grid; grid-template-columns:repeat(2,1fr);
+            gap:12px; padding:16px;
+        }
+        .stat-card {
+            background:white; border-radius:14px;
+            padding:16px; box-shadow:0 3px 12px rgba(0,0,0,0.07);
+            display:flex; flex-direction:column; gap:6px;
+        }
+        .stat-card .stat-icon {
+            width:40px; height:40px; border-radius:10px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:1.1rem; margin-bottom:4px;
+        }
+        .stat-card h3 { font-size:1.4rem; color:var(--dark); }
+        .stat-card p  { font-size:0.78rem; color:#888; }
+        .stat-card .change { font-size:0.72rem; font-weight:600; }
+        .green-bg  { background:#e8faf5; color:var(--green); }
+        .red-bg    { background:#fff0f0; color:var(--primary); }
+        .blue-bg   { background:#e8f0ff; color:#3a5fd9; }
+        .yellow-bg { background:#fff9e6; color:#e6a817; }
+
+        /* SWIFT FEE NOTICE */
+        .fee-notice {
+            margin:0 16px 12px;
+            background:linear-gradient(135deg,#fff9e6,#fff3cc);
+            border:1.5px solid var(--accent);
+            border-radius:12px; padding:12px 16px;
+            display:flex; align-items:center; gap:10px;
+            font-size:0.82rem; color:#7a5c00;
+        }
+        .fee-notice i { font-size:1.2rem; color:#e6a817; flex-shrink:0; }
+        .fee-notice strong { color:#5a3e00; }
+
+        /* SECTION */
+        .section {
+            background:white; border-radius:16px;
+            margin:0 16px 14px; padding:18px;
+            box-shadow:0 3px 12px rgba(0,0,0,0.06);
+        }
+        .section-title {
+            font-size:1rem; font-weight:700; color:var(--dark);
+            margin-bottom:16px; display:flex;
+            align-items:center; justify-content:space-between;
+        }
+        .section-title i { color:var(--primary); margin-right:8px; }
+
+        /* ADD PRODUCT FORM */
+        .form-group { margin-bottom:14px; }
+        .form-group label { display:block; font-size:0.78rem; color:#888; margin-bottom:5px; font-weight:600; }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width:100%; padding:11px 14px;
+            border:1.5px solid #e0e0e0; border-radius:10px;
+            font-size:0.9rem; outline:none; font-family:inherit;
+            transition:border 0.2s; background:white;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus { border-color:var(--primary); }
+        .form-group textarea { resize:vertical; min-height:80px; }
+        .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+        /* Image upload */
+        .img-upload-box {
+            border:2px dashed #e0e0e0; border-radius:10px;
+            padding:20px; text-align:center; cursor:pointer;
+            transition:border 0.2s; color:#aaa; font-size:0.85rem;
+        }
+        .img-upload-box:hover { border-color:var(--primary); color:var(--primary); }
+        .img-upload-box i { font-size:2rem; margin-bottom:6px; display:block; }
+        .img-preview {
+            display:none; width:100%; height:160px;
+            object-fit:cover; border-radius:10px; margin-top:8px;
+        }
+        #productImageInput { display:none; }
+
+        /* SUBMIT BTN */
+        .submit-btn {
+            width:100%; padding:13px; background:var(--primary);
+            color:white; border:none; border-radius:10px;
+            font-size:1rem; font-weight:700; cursor:pointer;
+            display:flex; align-items:center; justify-content:center;
+            gap:8px; transition:background 0.2s; font-family:inherit;
+        }
+        .submit-btn:hover { background:#e05555; }
+
+        /* PRODUCTS LIST */
+        .product-item {
+            display:flex; gap:12px; padding:12px 0;
+            border-bottom:1px solid #f5f5f5; align-items:center;
+        }
+        .product-item:last-child { border-bottom:none; }
+        .product-item img {
+            width:60px; height:60px; border-radius:10px;
+            object-fit:cover; background:#f0f0f0; flex-shrink:0;
+        }
+        .product-item-info { flex:1; min-width:0; }
+        .product-item-name { font-weight:600; font-size:0.9rem; color:var(--dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .product-item-cat  { font-size:0.75rem; color:var(--primary); margin:2px 0; }
+        .product-item-price { font-size:0.9rem; font-weight:700; color:var(--dark); }
+        .product-item-fee   { font-size:0.72rem; color:#e6a817; }
+        .product-item-actions { display:flex; gap:8px; flex-shrink:0; }
+        .icon-btn {
+            width:32px; height:32px; border-radius:8px; border:none;
+            cursor:pointer; display:flex; align-items:center; justify-content:center;
+            font-size:0.85rem; transition:all 0.2s;
+        }
+        .del-btn { background:#fff0f0; color:var(--primary); }
+        .del-btn:hover { background:var(--primary); color:white; }
+
+        /* SALES TABLE */
+        .sales-list { display:flex; flex-direction:column; gap:10px; }
+        .sale-item {
+            background:#f8f9fa; border-radius:10px; padding:12px;
+            display:flex; justify-content:space-between; align-items:center;
+        }
+        .sale-item-left .sale-name  { font-size:0.88rem; font-weight:600; color:var(--dark); }
+        .sale-item-left .sale-date  { font-size:0.72rem; color:#aaa; margin-top:2px; }
+        .sale-item-right { text-align:right; }
+        .sale-gross { font-size:0.9rem; font-weight:700; color:var(--dark); }
+        .sale-fee   { font-size:0.7rem; color:var(--primary); }
+        .sale-net   { font-size:0.85rem; font-weight:700; color:var(--green); }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align:center; padding:30px 20px; color:#bbb;
+        }
+        .empty-state i { font-size:2.5rem; margin-bottom:10px; display:block; }
+        .empty-state p { font-size:0.88rem; }
+
+        /* BOTTOM NAV */
+        .bottom-nav {
+            position:fixed; bottom:0; left:0; right:0;
+            background:white; border-top:1px solid #e0e0e0;
+            display:flex; z-index:200;
+            box-shadow:0 -2px 10px rgba(0,0,0,0.08);
+        }
+        .nav-item {
+            flex:1; display:flex; flex-direction:column;
+            align-items:center; justify-content:center;
+            padding:8px 2px; text-decoration:none;
+            color:#666; font-size:0.65rem; gap:3px;
+        }
+        .nav-item i { font-size:1.1rem; }
+        .nav-item.active { color:var(--primary); }
+
+        /* TOAST */
+        .toast {
+            position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(30px);
+            background:var(--dark); color:white; padding:10px 22px;
+            border-radius:30px; font-size:0.82rem; z-index:9999;
+            opacity:0; transition:all 0.3s; white-space:nowrap;
+        }
+        .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+        /* TABS */
+        .dash-tabs {
+            display:flex; background:white; border-bottom:2px solid #f0f0f0;
+            position:sticky; top:64px; z-index:90;
+        }
+        .dash-tab {
+            flex:1; padding:12px 0; text-align:center;
+            font-size:0.82rem; font-weight:600; color:#aaa;
+            cursor:pointer; border-bottom:3px solid transparent;
+            transition:all 0.2s;
+        }
+        .dash-tab.active { color:var(--primary); border-bottom-color:var(--primary); }
+
+        .tab-panel { display:none; }
+        .tab-panel.active { display:block; }
+
+        @media (min-width:601px) {
+            body { max-width:600px; margin:0 auto; }
+            .stats-grid { grid-template-columns:repeat(4,1fr); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+    <div class="top-bar-left">
+        <img src="789.png" alt="Swift" onerror="this.style.display='none'">
+        <div>
+            <h2 id="sellerStoreName">My Store</h2>
+            <small>Seller Dashboard</small>
+        </div>
+    </div>
+    <div class="top-bar-right">
+        <a href="index.html" title="View Store"><i class="fas fa-store"></i></a>
+        <a href="profile.html" title="Profile"><i class="fas fa-user-circle"></i></a>
+    </div>
+</div>
+
+<!-- DASH TABS -->
+<div class="dash-tabs">
+    <div class="dash-tab active" onclick="switchTab('overview')"><i class="fas fa-chart-pie"></i> Overview</div>
+    <div class="dash-tab" onclick="switchTab('addproduct')"><i class="fas fa-plus"></i> Add Product</div>
+    <div class="dash-tab" onclick="switchTab('myproducts')"><i class="fas fa-box"></i> My Products</div>
+    <div class="dash-tab" onclick="switchTab('sales')"><i class="fas fa-receipt"></i> Sales</div>
+</div>
+
+<!-- ══ OVERVIEW TAB ══ -->
+<div class="tab-panel active" id="tab-overview">
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon green-bg"><i class="fas fa-coins"></i></div>
+            <h3 id="statEarnings">GH₵ 0</h3>
+            <p>Net Earnings</p>
+            <span class="change" style="color:var(--green)">After 5% Swift fee</span>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon blue-bg"><i class="fas fa-shopping-cart"></i></div>
+            <h3 id="statSales">0</h3>
+            <p>Total Sales</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon red-bg"><i class="fas fa-box"></i></div>
+            <h3 id="statProducts">0</h3>
+            <p>Products Listed</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon yellow-bg"><i class="fas fa-percentage"></i></div>
+            <h3 id="statFee">GH₵ 0</h3>
+            <p>Swift Fee Paid</p>
+            <span class="change" style="color:#e6a817">5% per sale</span>
+        </div>
+    </div>
+
+    <div class="fee-notice">
+        <i class="fas fa-info-circle"></i>
+        <div>D-Swift charges a <strong>5% fee</strong> on every sale. Your earnings shown are already after the fee has been deducted.</div>
+    </div>
+
+    <!-- Recent sales preview -->
+    <div class="section">
+        <div class="section-title"><span><i class="fas fa-receipt"></i> Recent Sales</span></div>
+        <div class="sales-list" id="recentSalesList">
+            <div class="empty-state"><i class="fas fa-receipt"></i><p>No sales yet. Start by adding products!</p></div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ ADD PRODUCT TAB ══ -->
+<div class="tab-panel" id="tab-addproduct">
+    <div class="section" style="margin-top:16px;">
+        <div class="section-title"><span><i class="fas fa-plus-circle"></i> List a New Product</span></div>
+
+        <div class="form-group">
+            <label>Product Name *</label>
+            <input type="text" id="prodName" placeholder="e.g. Nivea Body Lotion"/>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Price (GH₵) *</label>
+                <input type="number" id="prodPrice" placeholder="0.00" min="0" step="0.01"/>
+            </div>
+            <div class="form-group">
+                <label>Category *</label>
+                <select id="prodCategory">
+                    <option value="">Select...</option>
+                    <option>Beauty</option>
+                    <option>Fashion</option>
+                    <option>Electronics</option>
+                    <option>Sports</option>
+                    <option>Home & Kitchen</option>
+                    <option>Health</option>
+                    <option>Other</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea id="prodDesc" placeholder="Describe your product..."></textarea>
+        </div>
+        <div class="form-group">
+            <label>Stock Quantity</label>
+            <input type="number" id="prodStock" placeholder="e.g. 10" min="1" value="1"/>
+        </div>
+        <div class="form-group">
+            <label>Product Image</label>
+            <div class="img-upload-box" onclick="document.getElementById('productImageInput').click()">
+                <i class="fas fa-camera"></i>
+                Tap to upload a photo
+            </div>
+            <input type="file" id="productImageInput" accept="image/*"/>
+            <img id="imgPreview" class="img-preview"/>
+        </div>
+
+        <div class="fee-notice" style="margin:0 0 16px;">
+            <i class="fas fa-calculator"></i>
+            <div id="feePreview">Enter a price to see your earnings after the 5% Swift fee.</div>
+        </div>
+
+        <span id="prodError" style="color:#ff4b2b;font-size:0.85rem;display:block;margin-bottom:10px;min-height:1.2em;"></span>
+        <button class="submit-btn" onclick="addProduct()">
+            <i class="fas fa-upload"></i> Post Product for Sale
+        </button>
+    </div>
+</div>
+
+<!-- ══ MY PRODUCTS TAB ══ -->
+<div class="tab-panel" id="tab-myproducts">
+    <div class="section" style="margin-top:16px;">
+        <div class="section-title"><span><i class="fas fa-boxes"></i> My Listed Products</span></div>
+        <div id="myProductsList">
+            <div class="empty-state"><i class="fas fa-box-open"></i><p>You haven't listed any products yet.</p></div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ SALES TAB ══ -->
+<div class="tab-panel" id="tab-sales">
+    <div class="section" style="margin-top:16px;">
+        <div class="section-title"><span><i class="fas fa-chart-line"></i> Sales History</span></div>
+        <div class="sales-list" id="fullSalesList">
+            <div class="empty-state"><i class="fas fa-receipt"></i><p>No sales recorded yet.</p></div>
+        </div>
+    </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+    <a href="index.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="seller.html" class="nav-item active"><i class="fas fa-store"></i><span>Dashboard</span></a>
+    <a href="profile.html" class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
+    <a href="#" class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SWIFT_FEE = 0.05;
+
+// ── Auth check ──
+const loggedIn = localStorage.getItem('swiftLoggedIn') === 'true';
+const user     = JSON.parse(localStorage.getItem('swiftCurrentUser') || 'null');
+if (!loggedIn || !user || user.role !== 'seller') {
+    window.location.href = 'login.html';
+}
+
+document.getElementById('sellerStoreName').textContent = user.storeName || user.name + "'s Store";
+
+// ── Tab switching ──
+function switchTab(name) {
+    document.querySelectorAll('.dash-tab').forEach((t,i) => {
+        const names = ['overview','addproduct','myproducts','sales'];
+        t.classList.toggle('active', names[i] === name);
+    });
+    document.querySelectorAll('.tab-panel').forEach(p => {
+        p.classList.toggle('active', p.id === 'tab-' + name);
+    });
+    if (name === 'myproducts') renderMyProducts();
+    if (name === 'sales')      renderSales();
+    if (name === 'overview')   renderOverview();
+}
+
+// ── Get/save seller data ──
+function getSellerData() {
+    const users = JSON.parse(localStorage.getItem('swiftUsers') || '[]');
+    return users.find(u => u.id === user.id) || user;
+}
+function saveSellerData(data) {
+    const users = JSON.parse(localStorage.getItem('swiftUsers') || '[]');
+    const idx   = users.findIndex(u => u.id === user.id);
+    if (idx > -1) users[idx] = data;
+    localStorage.setItem('swiftUsers', JSON.stringify(users));
+    localStorage.setItem('swiftCurrentUser', JSON.stringify(data));
+}
+
+// ── Image upload preview ──
+document.getElementById('productImageInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        const preview = document.getElementById('imgPreview');
+        preview.src   = ev.target.result;
+        preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+});
+
+// ── Fee preview on price input ──
+document.getElementById('prodPrice').addEventListener('input', function() {
+    const price   = parseFloat(this.value) || 0;
+    const fee     = price * SWIFT_FEE;
+    const earning = price - fee;
+    const el      = document.getElementById('feePreview');
+    if (price > 0) {
+        el.innerHTML = `Price: <strong>GH₵ ${price.toFixed(2)}</strong> &nbsp;|&nbsp; Swift fee (5%): <strong>GH₵ ${fee.toFixed(2)}</strong> &nbsp;|&nbsp; <span style="color:var(--green)">You earn: <strong>GH₵ ${earning.toFixed(2)}</strong></span>`;
+    } else {
+        el.textContent = 'Enter a price to see your earnings after the 5% Swift fee.';
+    }
+});
+
+// ── Add product ──
+function addProduct() {
+    const name     = document.getElementById('prodName').value.trim();
+    const price    = parseFloat(document.getElementById('prodPrice').value);
+    const category = document.getElementById('prodCategory').value;
+    const desc     = document.getElementById('prodDesc').value.trim();
+    const stock    = parseInt(document.getElementById('prodStock').value) || 1;
+    const imgSrc   = document.getElementById('imgPreview').src;
+    const errorEl  = document.getElementById('prodError');
+
+    if (!name || !price || !category) {
+        errorEl.textContent = 'Please fill in Name, Price and Category.';
+        return;
+    }
+    errorEl.textContent = '';
+
+    const seller  = getSellerData();
+    const product = {
+        id:        Date.now(),
+        sellerId:  user.id,
+        sellerName: user.name,
+        name, price, category, desc, stock,
+        image:     imgSrc && imgSrc !== window.location.href ? imgSrc : '',
+        listedDate: new Date().toLocaleDateString(),
+        sales: 0
+    };
+
+    if (!seller.products) seller.products = [];
+    seller.products.push(product);
+
+    // Also add to global products list so buyers can see it
+    const allProducts = JSON.parse(localStorage.getItem('swiftAllProducts') || '[]');
+    allProducts.push(product);
+    localStorage.setItem('swiftAllProducts', JSON.stringify(allProducts));
+
+    saveSellerData(seller);
+
+    // Reset form
+    document.getElementById('prodName').value     = '';
+    document.getElementById('prodPrice').value    = '';
+    document.getElementById('prodCategory').value = '';
+    document.getElementById('prodDesc').value     = '';
+    document.getElementById('prodStock').value    = '1';
+    document.getElementById('imgPreview').style.display = 'none';
+    document.getElementById('feePreview').textContent   = 'Enter a price to see your earnings after the 5% Swift fee.';
+
+    showToast('Product listed successfully!');
+    renderOverview();
+    switchTab('myproducts');
+}
+
+// ── Render my products ──
+function renderMyProducts() {
+    const seller  = getSellerData();
+    const list    = document.getElementById('myProductsList');
+    const products = seller.products || [];
+    if (!products.length) {
+        list.innerHTML = '<div class="empty-state"><i class="fas fa-box-open"></i><p>You haven\'t listed any products yet.</p></div>';
+        return;
+    }
+    list.innerHTML = products.map(p => {
+        const fee     = p.price * SWIFT_FEE;
+        const earning = p.price - fee;
+        const imgTag  = p.image
+            ? `<img src="${p.image}" alt="${p.name}">`
+            : `<div style="width:60px;height:60px;background:#f0f0f0;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:1.5rem;flex-shrink:0;"><i class="fas fa-image"></i></div>`;
+        return `
+        <div class="product-item">
+            ${imgTag}
+            <div class="product-item-info">
+                <div class="product-item-name">${p.name}</div>
+                <div class="product-item-cat">${p.category}</div>
+                <div class="product-item-price">GH₵ ${p.price.toFixed(2)}</div>
+                <div class="product-item-fee">You earn: GH₵ ${earning.toFixed(2)} (after 5% fee)</div>
+            </div>
+            <div class="product-item-actions">
+                <button class="icon-btn del-btn" onclick="deleteProduct(${p.id})" title="Delete"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ── Delete product ──
+function deleteProduct(productId) {
+    if (!confirm('Remove this product from sale?')) return;
+    const seller = getSellerData();
+    seller.products = (seller.products || []).filter(p => p.id !== productId);
+    saveSellerData(seller);
+
+    // Remove from global list too
+    const all = JSON.parse(localStorage.getItem('swiftAllProducts') || '[]').filter(p => p.id !== productId);
+    localStorage.setItem('swiftAllProducts', JSON.stringify(all));
+
+    showToast('Product removed.');
+    renderMyProducts();
+    renderOverview();
+}
+
+// ── Render sales ──
+function renderSales() {
+    const seller = getSellerData();
+    const sales  = seller.sales || [];
+    const el     = document.getElementById('fullSalesList');
+    if (!sales.length) {
+        el.innerHTML = '<div class="empty-state"><i class="fas fa-receipt"></i><p>No sales recorded yet.</p></div>';
+        return;
+    }
+    el.innerHTML = sales.map(s => {
+        const fee = s.gross * SWIFT_FEE;
+        const net = s.gross - fee;
+        return `
+        <div class="sale-item">
+            <div class="sale-item-left">
+                <div class="sale-name">${s.productName}</div>
+                <div class="sale-date">${s.date} &bull; Qty: ${s.qty}</div>
+            </div>
+            <div class="sale-item-right">
+                <div class="sale-gross">GH₵ ${s.gross.toFixed(2)}</div>
+                <div class="sale-fee">- GH₵ ${fee.toFixed(2)} fee</div>
+                <div class="sale-net">= GH₵ ${net.toFixed(2)}</div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ── Render overview stats ──
+function renderOverview() {
+    const seller   = getSellerData();
+    const sales    = seller.sales || [];
+    const products = seller.products || [];
+    const totalGross    = sales.reduce((s, i) => s + i.gross, 0);
+    const totalFee      = totalGross * SWIFT_FEE;
+    const totalEarnings = totalGross - totalFee;
+
+    document.getElementById('statEarnings').textContent  = 'GH₵ ' + totalEarnings.toFixed(2);
+    document.getElementById('statSales').textContent     = sales.length;
+    document.getElementById('statProducts').textContent  = products.length;
+    document.getElementById('statFee').textContent       = 'GH₵ ' + totalFee.toFixed(2);
+
+    // Recent sales (last 3)
+    const recent = [...sales].reverse().slice(0, 3);
+    const el     = document.getElementById('recentSalesList');
+    if (!recent.length) {
+        el.innerHTML = '<div class="empty-state"><i class="fas fa-receipt"></i><p>No sales yet. Start by adding products!</p></div>';
+        return;
+    }
+    el.innerHTML = recent.map(s => {
+        const fee = s.gross * SWIFT_FEE;
+        const net = s.gross - fee;
+        return `
+        <div class="sale-item">
+            <div class="sale-item-left">
+                <div class="sale-name">${s.productName}</div>
+                <div class="sale-date">${s.date}</div>
+            </div>
+            <div class="sale-item-right">
+                <div class="sale-net">GH₵ ${net.toFixed(2)}</div>
+                <div class="sale-fee">after fee</div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ── Logout ──
+function logout() {
+    if (confirm('Log out?')) {
+        localStorage.removeItem('swiftLoggedIn');
+        window.location.href = 'login.html';
+    }
+}
+
+// ── Toast ──
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Init
+renderOverview();
+</script>
+</body>
+</html>

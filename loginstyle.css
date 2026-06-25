@@ -93,10 +93,17 @@ button i { vertical-align:middle; }
 ════════════════════════════════ */
 @media (min-width: 601px) {
     #container {
-        width:95%; max-width:800px; height:500px;
+        width:95%; max-width:800px;
+        height:500px;
+        min-height:500px;
         position:relative; border-radius:20px;
         box-shadow:0 14px 28px -10px rgba(0,0,0,0.12), 0 10px 10px -10px rgba(0,0,0,0.04);
         transform-style:preserve-3d;
+        transition: min-height 0.4s ease;
+    }
+    #container.active {
+        min-height: 640px;
+        height: auto;
     }
     #container > div {
         position:absolute; width:50%; min-width:350px;
@@ -104,6 +111,7 @@ button i { vertical-align:middle; }
         display:flex; flex-direction:column;
         align-items:center; justify-content:center;
     }
+    .register { overflow-y:auto; }
     .content { width:100%; padding:2em 3.5em; text-align:center; }
     .content p { font-size:1.4rem; }
 
@@ -270,4 +278,39 @@ button i { vertical-align:middle; }
 
     .back-link { font-size: 1.3rem; margin-top: 1rem; }
     .error-msg { font-size: 1.3rem; }
+}
+
+/* ── Register panel compact fix (desktop) ── */
+@media (min-width: 601px) {
+    .register .content {
+        padding: 1em 2.5em;
+        justify-content: flex-start;
+        overflow-y: auto;
+        max-height: 100%;
+    }
+    .register h1 { font-size: 2.4rem; margin-bottom: 0.2em; }
+    .register form input {
+        padding: 8px 12px;
+        margin: 4px 0;
+        font-size: 1.2rem;
+    }
+    .register #registerBtn {
+        font-size: 1.3rem;
+        padding: 0.65em 1.5em;
+        margin: 0.5em auto;
+    }
+    .register span { margin: 5px auto; font-size: 1.15rem; }
+    .register i { margin: 0.3em; font-size: 1.5rem; }
+
+    /* Role selector */
+    .role-selector { gap: 8px; margin: 6px 0; }
+    .role-btn {
+        font-size: 1.1rem !important;
+        padding: 7px 5px !important;
+        gap: 4px !important;
+    }
+    .role-btn i { font-size: 1.3rem !important; }
+    .role-btn small { font-size: 0.8rem !important; }
+    .role-label { font-size: 1.1rem !important; margin: 3px 0 1px !important; }
+    .error-msg { font-size: 1.1rem; min-height: 1.4rem; }
 }

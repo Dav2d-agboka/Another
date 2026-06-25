@@ -7,198 +7,235 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <style>
         :root {
-            --primary: #ff6b6b;
-            --secondary: #4ecdc4;
-            --dark: #1a1a2e;
-            --accent: #ffd166;
-            --bg: #f0f2f5;
+            --primary:#ff6b6b; --secondary:#4ecdc4;
+            --dark:#1a1a2e; --accent:#ffd166;
+            --green:#0ba87e; --bg:#f0f2f5;
         }
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
-        body { background:var(--bg); min-height:100vh; padding-bottom:80px; }
+        body { background:var(--bg); min-height:100vh; padding-bottom:75px; }
 
-        /* ── TOP BAR ── */
+        /* TOP BAR */
         .top-bar {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background:linear-gradient(135deg,var(--primary),var(--secondary));
             color:white; padding:14px 20px;
             display:flex; align-items:center; justify-content:space-between;
             position:sticky; top:0; z-index:100;
             box-shadow:0 2px 10px rgba(0,0,0,0.15);
         }
-        .top-bar h2 { font-size:1.15rem; }
-        .top-bar a  { color:white; text-decoration:none; font-size:1.3rem; }
+        .top-bar h2 { font-size:1.1rem; }
+        .top-bar a  { color:white; text-decoration:none; font-size:1.2rem; }
 
-        /* ── COVER + AVATAR ── */
+        /* COVER + AVATAR */
         .cover {
-            height:160px;
-            background: linear-gradient(135deg, #ff6b6b 0%, #ffd166 50%, #4ecdc4 100%);
+            height:140px;
+            background:linear-gradient(135deg,#ff6b6b 0%,#ffd166 50%,#4ecdc4 100%);
             position:relative;
         }
         .avatar-wrap {
-            position:absolute; bottom:-50px; left:50%; transform:translateX(-50%);
+            position:absolute; bottom:-48px; left:50%; transform:translateX(-50%);
             text-align:center;
         }
         .avatar-wrap img {
-            width:100px; height:100px; border-radius:50%;
+            width:96px; height:96px; border-radius:50%;
             border:4px solid white; object-fit:cover;
-            background:#ddd;
-            box-shadow:0 4px 14px rgba(0,0,0,0.2);
+            background:#ddd; box-shadow:0 4px 14px rgba(0,0,0,0.2);
         }
         .avatar-edit-btn {
             position:absolute; bottom:2px; right:2px;
-            background:var(--primary); color:white;
-            border:none; border-radius:50%; width:28px; height:28px;
-            font-size:0.7rem; cursor:pointer; display:flex;
-            align-items:center; justify-content:center;
-            box-shadow:0 2px 6px rgba(0,0,0,0.2);
+            background:var(--primary); color:white; border:none;
+            border-radius:50%; width:26px; height:26px;
+            font-size:0.65rem; cursor:pointer;
+            display:flex; align-items:center; justify-content:center;
         }
         #avatarInput { display:none; }
 
-        /* ── PROFILE CARD ── */
+        /* ROLE BADGE */
+        .role-badge {
+            display:inline-block; margin-top:8px;
+            padding:3px 12px; border-radius:20px;
+            font-size:0.72rem; font-weight:700; text-transform:uppercase;
+        }
+        .role-buyer  { background:#e8f0ff; color:#3a5fd9; }
+        .role-seller { background:#e8faf5; color:var(--green); }
+
+        /* PROFILE CARD */
         .profile-card {
             background:white; border-radius:16px;
-            margin: 60px 16px 16px;
-            padding: 16px;
-            box-shadow:0 4px 16px rgba(0,0,0,0.08);
+            margin:58px 16px 14px; padding:16px;
+            box-shadow:0 4px 14px rgba(0,0,0,0.08);
             text-align:center;
         }
-        .profile-card h2 { font-size:1.3rem; color:var(--dark); margin-bottom:4px; }
-        .profile-card .email { color:#888; font-size:0.85rem; margin-bottom:6px; }
-        .profile-card .bio-text { color:#555; font-size:0.9rem; margin-bottom:12px; font-style:italic; }
-        .join-date { font-size:0.78rem; color:#aaa; }
+        .profile-card h2  { font-size:1.25rem; color:var(--dark); margin-bottom:3px; }
+        .profile-card .email { color:#888; font-size:0.82rem; margin-bottom:4px; }
+        .profile-card .bio   { color:#666; font-size:0.85rem; font-style:italic; margin:8px 0; }
+        .join-date { font-size:0.75rem; color:#bbb; }
 
-        /* Stats row */
-        .stats-row {
-            display:flex; justify-content:center; gap:0;
-            border-top:1px solid #f0f0f0; margin-top:14px; padding-top:14px;
-        }
+        .stats-row { display:flex; border-top:1px solid #f0f0f0; margin-top:12px; padding-top:12px; }
         .stat { flex:1; text-align:center; border-right:1px solid #f0f0f0; }
         .stat:last-child { border-right:none; }
-        .stat h4 { font-size:1.2rem; color:var(--dark); }
-        .stat p   { font-size:0.72rem; color:#888; }
+        .stat h4 { font-size:1.1rem; color:var(--dark); }
+        .stat p  { font-size:0.7rem; color:#888; }
 
-        /* ── SECTIONS ── */
+        /* SECTION */
         .section {
             background:white; border-radius:16px;
-            margin:0 16px 14px; padding:18px;
-            box-shadow:0 4px 16px rgba(0,0,0,0.06);
+            margin:0 16px 14px; padding:16px;
+            box-shadow:0 3px 12px rgba(0,0,0,0.06);
         }
         .section-title {
-            font-size:1rem; font-weight:700; color:var(--dark);
-            margin-bottom:14px; display:flex; align-items:center; gap:8px;
+            font-size:0.95rem; font-weight:700; color:var(--dark);
+            margin-bottom:14px; display:flex;
+            align-items:center; justify-content:space-between;
         }
-        .section-title i { color:var(--primary); }
+        .section-title i { color:var(--primary); margin-right:8px; }
 
-        /* Detail rows */
+        /* DETAIL ROWS */
         .detail-row {
             display:flex; align-items:center; gap:12px;
             padding:10px 0; border-bottom:1px solid #f5f5f5;
         }
-        .detail-row:last-child { border-bottom:none; padding-bottom:0; }
-        .detail-icon { width:36px; height:36px; border-radius:50%; background:#fff0f0;
-            display:flex; align-items:center; justify-content:center;
-            color:var(--primary); font-size:0.85rem; flex-shrink:0; }
-        .detail-label { font-size:0.72rem; color:#aaa; }
-        .detail-value { font-size:0.9rem; color:var(--dark); font-weight:500; }
+        .detail-row:last-child { border-bottom:none; }
+        .detail-icon {
+            width:34px; height:34px; border-radius:50%;
+            background:#fff0f0; display:flex; align-items:center;
+            justify-content:center; color:var(--primary);
+            font-size:0.82rem; flex-shrink:0;
+        }
+        .detail-label { font-size:0.7rem; color:#aaa; }
+        .detail-value { font-size:0.88rem; color:var(--dark); font-weight:500; }
 
-        /* ── EDIT FORM ── */
-        .edit-form { display:none; flex-direction:column; gap:12px; }
+        /* EDIT FORM */
+        .edit-form { display:none; flex-direction:column; gap:10px; }
         .edit-form.open { display:flex; }
-        .edit-form input, .edit-form textarea {
+        .edit-form label { font-size:0.75rem; color:#888; margin-bottom:-4px; }
+        .edit-form input,
+        .edit-form textarea {
             border:1.5px solid #e0e0e0; border-radius:10px;
-            padding:11px 14px; font-size:0.9rem; outline:none;
-            transition:border 0.2s; width:100%;
-            font-family:inherit;
+            padding:10px 13px; font-size:0.88rem; outline:none;
+            font-family:inherit; width:100%; transition:border 0.2s;
         }
-        .edit-form input:focus, .edit-form textarea:focus { border-color:var(--primary); }
-        .edit-form textarea { resize:vertical; min-height:80px; }
-        .edit-form label { font-size:0.78rem; color:#888; margin-bottom:-6px; }
+        .edit-form input:focus,
+        .edit-form textarea:focus { border-color:var(--primary); }
+        .edit-form textarea { resize:vertical; min-height:70px; }
 
-        /* ── BUTTONS ── */
-        .btn-row { display:flex; gap:10px; flex-wrap:wrap; }
+        /* ORDERS */
+        .order-item {
+            background:#f8f9fa; border-radius:10px;
+            padding:12px; margin-bottom:10px;
+        }
+        .order-item:last-child { margin-bottom:0; }
+        .order-header {
+            display:flex; justify-content:space-between;
+            align-items:center; margin-bottom:8px;
+        }
+        .order-id   { font-size:0.78rem; font-weight:700; color:var(--dark); }
+        .order-date { font-size:0.7rem; color:#aaa; }
+        .order-status {
+            font-size:0.68rem; font-weight:700; padding:3px 9px;
+            border-radius:20px; background:#e8faf5; color:var(--green);
+        }
+        .order-products { font-size:0.8rem; color:#555; margin-bottom:6px; }
+        .order-total { font-size:0.9rem; font-weight:700; color:var(--primary); }
+
+        /* BUTTONS */
+        .btn-row { display:flex; gap:10px; }
         .btn {
-            flex:1; padding:11px 16px; border:none; border-radius:10px;
-            font-size:0.9rem; font-weight:600; cursor:pointer;
-            transition:all 0.2s; display:flex; align-items:center;
-            justify-content:center; gap:7px; text-decoration:none;
-        }
-        .btn-primary  { background:var(--primary); color:white; }
-        .btn-primary:hover  { background:#ff5252; transform:translateY(-1px); }
-        .btn-secondary{ background:#f0f0f0; color:var(--dark); }
-        .btn-secondary:hover{ background:#e0e0e0; }
-        .btn-danger   { background:#fff0f0; color:var(--primary); border:1.5px solid var(--primary); }
-        .btn-danger:hover { background:var(--primary); color:white; }
-        .btn-green    { background:#e8faf5; color:#0ba87e; border:1.5px solid #0ba87e; }
-        .btn-green:hover { background:#0ba87e; color:white; }
-
-        /* ── LOGOUT ── */
-        .logout-section {
-            margin:0 16px 30px; padding:16px;
-            background:white; border-radius:16px;
-            box-shadow:0 4px 16px rgba(0,0,0,0.06);
-        }
-        .logout-btn {
-            width:100%; padding:13px; background:var(--primary);
-            color:white; border:none; border-radius:10px;
-            font-size:1rem; font-weight:700; cursor:pointer;
+            flex:1; padding:10px; border:none; border-radius:10px;
+            font-size:0.88rem; font-weight:600; cursor:pointer;
             display:flex; align-items:center; justify-content:center;
-            gap:10px; transition:background 0.2s;
+            gap:6px; text-decoration:none; font-family:inherit;
+            transition:all 0.2s;
+        }
+        .btn-primary   { background:var(--primary); color:white; }
+        .btn-primary:hover   { background:#e05555; }
+        .btn-secondary { background:#f0f0f0; color:var(--dark); }
+        .btn-green     { background:#e8faf5; color:var(--green); border:1.5px solid var(--green); }
+        .btn-green:hover { background:var(--green); color:white; }
+
+        /* SELLER LINK CARD */
+        .seller-card {
+            background:linear-gradient(135deg,var(--dark),#2d2d5e);
+            border-radius:16px; margin:0 16px 14px; padding:18px;
+            color:white; display:flex; align-items:center;
+            justify-content:space-between;
+        }
+        .seller-card h3 { font-size:1rem; margin-bottom:4px; }
+        .seller-card p  { font-size:0.78rem; opacity:0.8; }
+        .seller-card a  {
+            background:var(--accent); color:var(--dark);
+            padding:9px 18px; border-radius:20px;
+            text-decoration:none; font-weight:700; font-size:0.82rem;
+            white-space:nowrap; flex-shrink:0;
+        }
+
+        /* LOGOUT */
+        .logout-section { margin:0 16px 20px; }
+        .logout-btn {
+            width:100%; padding:13px; background:var(--primary); color:white;
+            border:none; border-radius:10px; font-size:0.95rem; font-weight:700;
+            cursor:pointer; display:flex; align-items:center;
+            justify-content:center; gap:10px; font-family:inherit;
+            transition:background 0.2s;
         }
         .logout-btn:hover { background:#e05555; }
 
-        /* ── NOT LOGGED IN ── */
+        /* NOT LOGGED IN */
         .not-logged-in {
             display:none; flex-direction:column; align-items:center;
-            justify-content:center; min-height:70vh; text-align:center;
-            padding:2rem;
+            justify-content:center; min-height:80vh;
+            text-align:center; padding:2rem;
         }
         .not-logged-in i { font-size:4rem; color:#ddd; margin-bottom:1rem; }
         .not-logged-in h2 { color:var(--dark); margin-bottom:0.5rem; }
-        .not-logged-in p  { color:#888; margin-bottom:1.5rem; font-size:0.95rem; }
+        .not-logged-in p  { color:#888; margin-bottom:1.5rem; font-size:0.9rem; }
         .not-logged-in a  {
             background:var(--primary); color:white; padding:12px 30px;
             border-radius:30px; text-decoration:none; font-weight:600;
         }
 
-        /* ── BOTTOM NAV ── */
+        /* EMPTY STATE */
+        .empty-state { text-align:center; padding:24px; color:#ccc; }
+        .empty-state i { font-size:2rem; margin-bottom:8px; display:block; }
+        .empty-state p { font-size:0.82rem; }
+
+        /* BOTTOM NAV */
         .bottom-nav {
             position:fixed; bottom:0; left:0; right:0;
             background:white; border-top:1px solid #e0e0e0;
-            display:flex; z-index:200; box-shadow:0 -2px 10px rgba(0,0,0,0.08);
+            display:flex; z-index:200;
+            box-shadow:0 -2px 10px rgba(0,0,0,0.08);
         }
         .nav-item {
-            flex:1; display:flex; flex-direction:column;
+            flex:1; min-width:0; display:flex; flex-direction:column;
             align-items:center; justify-content:center;
-            padding:8px 0; text-decoration:none;
-            color:#666; font-size:0.65rem; gap:3px;
+            padding:8px 2px; text-decoration:none; color:#666; gap:3px;
         }
-        .nav-item i { font-size:1.15rem; }
+        .nav-item span { font-size:0.6rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; width:100%; text-align:center; }
+        .nav-item i { font-size:1.1rem; }
         .nav-item.active { color:var(--primary); }
 
-        /* ── SUCCESS TOAST ── */
+        /* TOAST */
         .toast {
-            position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(40px);
+            position:fixed; bottom:80px; left:50%;
+            transform:translateX(-50%) translateY(30px);
             background:var(--dark); color:white; padding:10px 22px;
-            border-radius:30px; font-size:0.85rem; z-index:9999;
+            border-radius:30px; font-size:0.82rem; z-index:9999;
             opacity:0; transition:all 0.3s; white-space:nowrap;
         }
         .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
-        @media (min-width:601px) {
-            body { max-width:520px; margin:0 auto; }
-            .cover { height:200px; }
-        }
+        @media (min-width:601px) { body { max-width:520px; margin:0 auto; } }
     </style>
 </head>
 <body>
 
-<!-- ── TOP BAR ── -->
 <div class="top-bar">
     <a href="index.html"><i class="fas fa-arrow-left"></i></a>
     <h2>My Profile</h2>
     <a href="index.html"><i class="fas fa-home"></i></a>
 </div>
 
-<!-- ══ NOT LOGGED IN STATE ══ -->
+<!-- NOT LOGGED IN -->
 <div class="not-logged-in" id="notLoggedIn">
     <i class="fas fa-user-lock"></i>
     <h2>You're not logged in</h2>
@@ -206,36 +243,42 @@
     <a href="login.html"><i class="fas fa-sign-in-alt"></i> Login / Register</a>
 </div>
 
-<!-- ══ LOGGED IN STATE ══ -->
+<!-- LOGGED IN -->
 <div id="profileContent" style="display:none;">
 
-    <!-- Cover + Avatar -->
     <div class="cover">
         <div class="avatar-wrap">
-            <img id="profileAvatar" src="https://ui-avatars.com/api/?name=User&background=ff6b6b&color=fff&size=200" alt="Avatar">
-            <button class="avatar-edit-btn" onclick="document.getElementById('avatarInput').click()" title="Change photo">
+            <img id="profileAvatar" src="" alt="Avatar">
+            <button class="avatar-edit-btn" onclick="document.getElementById('avatarInput').click()">
                 <i class="fas fa-camera"></i>
             </button>
             <input type="file" id="avatarInput" accept="image/*">
         </div>
     </div>
 
-    <!-- Profile Card -->
     <div class="profile-card">
         <h2 id="displayName">—</h2>
         <div class="email" id="displayEmail">—</div>
-        <div class="bio-text" id="displayBio">No bio yet.</div>
+        <span class="role-badge" id="roleBadge"></span>
+        <div class="bio" id="displayBio"></div>
         <div class="join-date" id="displayJoin"></div>
-        <div class="stats-row">
-            <div class="stat"><h4>0</h4><p>Orders</p></div>
-            <div class="stat"><h4>0</h4><p>Wishlist</p></div>
-            <div class="stat"><h4>GH₵ 0</h4><p>Spent</p></div>
-        </div>
+        <div class="stats-row" id="statsRow"></div>
     </div>
 
-    <!-- Details Section -->
+    <!-- Seller shortcut card (only for sellers) -->
+    <div class="seller-card" id="sellerCard" style="display:none;">
+        <div>
+            <h3><i class="fas fa-store"></i> Seller Dashboard</h3>
+            <p>Manage products, view sales & earnings</p>
+        </div>
+        <a href="seller.html">Go &rsaquo;</a>
+    </div>
+
+    <!-- Personal Details -->
     <div class="section">
-        <div class="section-title"><i class="fas fa-id-card"></i> Personal Details</div>
+        <div class="section-title">
+            <span><i class="fas fa-id-card"></i> Personal Details</span>
+        </div>
 
         <!-- View mode -->
         <div id="viewMode">
@@ -275,9 +318,9 @@
             <label>Location</label>
             <input type="text" id="editLocation" placeholder="City, Country"/>
             <label>Bio</label>
-            <textarea id="editBio" placeholder="Tell us a little about yourself..."></textarea>
+            <textarea id="editBio" placeholder="Tell us about yourself..."></textarea>
             <label>New Password (leave blank to keep current)</label>
-            <input type="password" id="editPassword" placeholder="New password"/>
+            <input type="password" id="editPassword" placeholder="New password (min 6 chars)"/>
             <div class="btn-row">
                 <button class="btn btn-green" onclick="saveProfile()"><i class="fas fa-check"></i> Save</button>
                 <button class="btn btn-secondary" onclick="closeEdit()"><i class="fas fa-times"></i> Cancel</button>
@@ -285,10 +328,18 @@
         </div>
     </div>
 
-    <!-- Account Actions -->
+    <!-- Orders (buyers only) -->
+    <div class="section" id="ordersSection" style="display:none;">
+        <div class="section-title"><span><i class="fas fa-shopping-bag"></i> My Orders</span></div>
+        <div id="ordersList">
+            <div class="empty-state"><i class="fas fa-shopping-bag"></i><p>No orders yet.</p></div>
+        </div>
+    </div>
+
+    <!-- Account actions -->
     <div class="section">
-        <div class="section-title"><i class="fas fa-cog"></i> Account</div>
-        <div class="btn-row" style="flex-direction:column; gap:10px;">
+        <div class="section-title"><span><i class="fas fa-cog"></i> Account</span></div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
             <a href="index.html" class="btn btn-secondary"><i class="fas fa-shopping-bag"></i> Continue Shopping</a>
             <a href="contact.html" class="btn btn-secondary"><i class="fas fa-headset"></i> Contact Support</a>
         </div>
@@ -303,10 +354,8 @@
 
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<!-- Bottom Nav -->
 <nav class="bottom-nav">
     <a href="index.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
     <a href="service.html" class="nav-item"><i class="fas fa-th-large"></i><span>Categories</span></a>
@@ -316,99 +365,172 @@
 </nav>
 
 <script>
-    const loggedIn = localStorage.getItem('swiftLoggedIn') === 'true';
-    const user     = JSON.parse(localStorage.getItem('swiftUser') || 'null');
+// ── Auth check ──
+const loggedIn = localStorage.getItem('swiftLoggedIn') === 'true';
+const session  = JSON.parse(localStorage.getItem('swiftCurrentUser') || 'null');
 
-    if (!loggedIn || !user) {
-        document.getElementById('notLoggedIn').style.display = 'flex';
+if (!loggedIn || !session) {
+    document.getElementById('notLoggedIn').style.display = 'flex';
+} else {
+    document.getElementById('profileContent').style.display = 'block';
+    loadProfile();
+}
+
+function getUser() {
+    const users = JSON.parse(localStorage.getItem('swiftUsers') || '[]');
+    return users.find(u => u.id === session.id) || session;
+}
+function saveUser(u) {
+    const users = JSON.parse(localStorage.getItem('swiftUsers') || '[]');
+    const idx   = users.findIndex(x => x.id === u.id);
+    if (idx > -1) users[idx] = u;
+    localStorage.setItem('swiftUsers', JSON.stringify(users));
+    localStorage.setItem('swiftCurrentUser', JSON.stringify(u));
+}
+
+function loadProfile() {
+    const u = getUser();
+
+    // Avatar
+    document.getElementById('profileAvatar').src = u.profilePic ||
+        `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name)}&background=ff6b6b&color=fff&size=200`;
+
+    // Card
+    document.getElementById('displayName').textContent  = u.name  || '—';
+    document.getElementById('displayEmail').textContent = u.email || '—';
+    document.getElementById('displayBio').textContent   = u.bio   || '';
+    document.getElementById('displayJoin').textContent  = u.joinDate ? 'Joined ' + u.joinDate : '';
+
+    // Role badge
+    const badge = document.getElementById('roleBadge');
+    badge.textContent  = u.role === 'seller' ? '🏪 Seller' : '🛍️ Buyer';
+    badge.className    = 'role-badge ' + (u.role === 'seller' ? 'role-seller' : 'role-buyer');
+
+    // Stats
+    const orders   = u.orders   || [];
+    const statsRow = document.getElementById('statsRow');
+    if (u.role === 'buyer') {
+        const spent = orders.reduce((s, o) => s + o.total, 0);
+        statsRow.innerHTML = `
+            <div class="stat"><h4>${orders.length}</h4><p>Orders</p></div>
+            <div class="stat"><h4>0</h4><p>Wishlist</p></div>
+            <div class="stat"><h4>GH₵ ${spent.toFixed(0)}</h4><p>Spent</p></div>`;
     } else {
-        document.getElementById('profileContent').style.display = 'block';
-        loadProfile();
+        const sales    = u.sales || [];
+        const products = u.products || [];
+        const gross    = sales.reduce((s, x) => s + x.gross, 0);
+        const earnings = gross * 0.95;
+        statsRow.innerHTML = `
+            <div class="stat"><h4>${products.length}</h4><p>Products</p></div>
+            <div class="stat"><h4>${sales.length}</h4><p>Sales</p></div>
+            <div class="stat"><h4>GH₵ ${earnings.toFixed(0)}</h4><p>Earned</p></div>`;
     }
 
-    function loadProfile() {
-        const u = JSON.parse(localStorage.getItem('swiftUser'));
+    // Details
+    document.getElementById('detailName').textContent     = u.name     || '—';
+    document.getElementById('detailEmail').textContent    = u.email    || '—';
+    document.getElementById('detailPhone').textContent    = u.phone    || 'Not set';
+    document.getElementById('detailLocation').textContent = u.location || 'Not set';
+    document.getElementById('detailJoin').textContent     = u.joinDate || '—';
 
-        // Avatar
-        if (u.profilePic) document.getElementById('profileAvatar').src = u.profilePic;
-        else document.getElementById('profileAvatar').src =
-            `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name)}&background=ff6b6b&color=fff&size=200`;
-
-        // Card
-        document.getElementById('displayName').textContent  = u.name || '—';
-        document.getElementById('displayEmail').textContent = u.email || '—';
-        document.getElementById('displayBio').textContent   = u.bio || 'No bio yet.';
-        document.getElementById('displayJoin').textContent  = u.joinDate ? 'Joined ' + u.joinDate : '';
-
-        // Details
-        document.getElementById('detailName').textContent     = u.name || '—';
-        document.getElementById('detailEmail').textContent    = u.email || '—';
-        document.getElementById('detailPhone').textContent    = u.phone || 'Not set';
-        document.getElementById('detailLocation').textContent = u.location || 'Not set';
-        document.getElementById('detailJoin').textContent     = u.joinDate || '—';
+    // Seller card
+    if (u.role === 'seller') {
+        document.getElementById('sellerCard').style.display = 'flex';
     }
 
-    // ── Avatar upload ──
-    document.getElementById('avatarInput').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(ev) {
-            const src = ev.target.result;
-            document.getElementById('profileAvatar').src = src;
-            const u = JSON.parse(localStorage.getItem('swiftUser'));
-            u.profilePic = src;
-            localStorage.setItem('swiftUser', JSON.stringify(u));
-            showToast('Profile picture updated!');
-        };
-        reader.readAsDataURL(file);
-    });
+    // Orders section (buyers only)
+    if (u.role === 'buyer') {
+        document.getElementById('ordersSection').style.display = 'block';
+        renderOrders(u);
+    }
+}
 
-    // ── Edit form ──
-    function openEdit() {
-        const u = JSON.parse(localStorage.getItem('swiftUser'));
-        document.getElementById('editName').value     = u.name     || '';
-        document.getElementById('editPhone').value    = u.phone    || '';
-        document.getElementById('editLocation').value = u.location || '';
-        document.getElementById('editBio').value      = u.bio      || '';
-        document.getElementById('editPassword').value = '';
-        document.getElementById('viewMode').style.display = 'none';
-        document.getElementById('editForm').classList.add('open');
+function renderOrders(u) {
+    const orders = [...(u.orders || [])].reverse();
+    const el     = document.getElementById('ordersList');
+    if (!orders.length) {
+        el.innerHTML = '<div class="empty-state"><i class="fas fa-shopping-bag"></i><p>No orders yet. Start shopping!</p></div>';
+        return;
     }
-    function closeEdit() {
-        document.getElementById('editForm').classList.remove('open');
-        document.getElementById('viewMode').style.display = 'block';
-    }
-    function saveProfile() {
-        const u = JSON.parse(localStorage.getItem('swiftUser'));
-        u.name     = document.getElementById('editName').value.trim()     || u.name;
-        u.phone    = document.getElementById('editPhone').value.trim()    || u.phone;
-        u.location = document.getElementById('editLocation').value.trim() || u.location;
-        u.bio      = document.getElementById('editBio').value.trim()      || u.bio;
-        const newPass = document.getElementById('editPassword').value;
-        if (newPass && newPass.length >= 6) u.password = newPass;
-        localStorage.setItem('swiftUser', JSON.stringify(u));
-        closeEdit();
-        loadProfile();
-        showToast('Profile saved successfully!');
-    }
+    el.innerHTML = orders.map(o => `
+        <div class="order-item">
+            <div class="order-header">
+                <div>
+                    <div class="order-id">Order #${String(o.id).slice(-6)}</div>
+                    <div class="order-date">${o.date}</div>
+                </div>
+                <span class="order-status">${o.status || 'Processing'}</span>
+            </div>
+            <div class="order-products">${o.items.map(i => `${i.name} x${i.qty}`).join(', ')}</div>
+            <div class="order-total">Total: GH₵ ${o.total.toFixed(2)}</div>
+        </div>`).join('');
+}
 
-    // ── Logout ──
-    function logout() {
-        if (confirm('Are you sure you want to log out?')) {
-            localStorage.removeItem('swiftLoggedIn');
-            showToast('Logged out. Goodbye!');
-            setTimeout(() => window.location.href = 'login.html', 1200);
-        }
-    }
+// ── Avatar upload ──
+document.getElementById('avatarInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        document.getElementById('profileAvatar').src = ev.target.result;
+        const u = getUser();
+        u.profilePic = ev.target.result;
+        saveUser(u);
+        showToast('Profile picture updated!');
+    };
+    reader.readAsDataURL(file);
+});
 
-    // ── Toast ──
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.textContent = msg;
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 2500);
+// ── Edit form ──
+function openEdit() {
+    const u = getUser();
+    document.getElementById('editName').value     = u.name     || '';
+    document.getElementById('editPhone').value    = u.phone    || '';
+    document.getElementById('editLocation').value = u.location || '';
+    document.getElementById('editBio').value      = u.bio      || '';
+    document.getElementById('editPassword').value = '';
+    document.getElementById('viewMode').style.display = 'none';
+    document.getElementById('editForm').classList.add('open');
+}
+function closeEdit() {
+    document.getElementById('editForm').classList.remove('open');
+    document.getElementById('viewMode').style.display = 'block';
+}
+function saveProfile() {
+    const u    = getUser();
+    const name = document.getElementById('editName').value.trim();
+    if (name) u.name = name;
+    const phone    = document.getElementById('editPhone').value.trim();
+    const location = document.getElementById('editLocation').value.trim();
+    const bio      = document.getElementById('editBio').value.trim();
+    const newPass  = document.getElementById('editPassword').value;
+    if (phone)    u.phone    = phone;
+    if (location) u.location = location;
+    if (bio)      u.bio      = bio;
+    if (newPass && newPass.length >= 6) u.password = newPass;
+    saveUser(u);
+    closeEdit();
+    loadProfile();
+    showToast('Profile saved!');
+}
+
+// ── Logout ──
+function logout() {
+    if (confirm('Are you sure you want to log out?')) {
+        localStorage.removeItem('swiftLoggedIn');
+        localStorage.removeItem('swiftCurrentUser');
+        showToast('Logged out. Goodbye!');
+        setTimeout(() => window.location.href = 'login.html', 1000);
     }
+}
+
+// ── Toast ──
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+}
 </script>
 </body>
 </html>
