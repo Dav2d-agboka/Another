@@ -1,101 +1,81 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Login & Signup form With Flip Animation | CodeByGaurav</title>
-        <link rel="stylesheet" href="loginstyle.css" />
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-        />
-    </head>
-    <body>
-        <div id="container">
-            <!-- Login -->
-            <div class="login">
-                <div class="content">
-                    <h1>Log In</h1>
-                    <form>
-                        <input type="Email" placeholder="Email" />
-                        <input type="Password" placeholder="Password" />
-                        <span class="remember">Remember me</span>
-                        <span class="forget">Forgot Password</span>
-                        <span class="clearfix"></span>
-                        <p>Go back to homepage <a href="1.html">Click Here</a></p>
-                        <button onclick="return false;">Log In</button>
-                    </form>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Swift — Login & Sign Up</title>
+    <link rel="stylesheet" href="loginstyle.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <style>
+        .error-msg { color:#ff6b6b; font-size:1.2em; margin:6px 0; min-height:1.4em; display:block; }
+        .back-link  { display:block; text-align:center; margin-top:10px; font-size:1.2em; color:#888; }
+        .back-link a{ color:#ff4b2b; text-decoration:none; }
+    </style>
+</head>
+<body>
+    <div id="container">
 
-                    <span class="loginwith">Or Connect with</span>
-
-                    <!-- Socials Icons -->
-                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="#"><i class="fa-brands fa-github"></i></a>
-                    <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
-
-                    <span class="copy">&copy 2026</span>
-                </div>
-            </div>
-
-            <!-- Front Page -->
-            <div class="page front">
-                <div class="content">
-                    <!-- User Icon -->
-                    <i class="fa-solid fa-user-plus userIcon"></i>
-
-                    <h1>Hello, friend</h1>
-                    <p>Enter your personal details and start journey with us</p>
-
-                    <button id="register">
-                        Register
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Back Page -->
-            <div class="page back">
-                <div class="content">
-                    <!-- Login Icon -->
-                    <i class="fa-solid fa-right-to-bracket bracketIcon"></i>
-
-                    <h1>Welcome Back!</h1>
-                    <p>
-                        To keep connected with us please login with your
-                        personal info
-                    </p>
-
-                    <button id="login">
-                        <i class="fa-solid fa-arrow-left"></i> Log In
-                    </button>
-                </div>
-            </div>
-
-            <!-- Register -->
-            <div class="register">
-                <div class="content">
-                    <h1>Sign Up</h1>
-
-                    <!-- Socials icons -->
-                    <i class="fa-brands fa-facebook-f"></i>
-                    <i class="fa-brands fa-twitter"></i>
-                    <i class="fa-brands fa-github"></i>
-                    <i class="fa-brands fa-linkedin-in"></i>
-
-                    <span class="loginwith">Or</span>
-
-                    <form>
-                        <input type="text" placeholder="Name">
-                        <input type="email" placeholder="Email">
-                        <input type="password" placeholder="Password">
-                        <span class="remember">I accept the terms & conditions</span>
-                        <span class="clearfix"></span>
-                        <button onclick="return false;">Register</button>
-                    </form>
-                </div>
+        <!-- ── LOGIN PANEL ── -->
+        <div class="login">
+            <div class="content">
+                <h1>Log In</h1>
+                <form onsubmit="return false;">
+                    <input type="email"    id="loginEmail"    placeholder="Email" autocomplete="email"/>
+                    <input type="password" id="loginPassword" placeholder="Password"/>
+                    <span class="clearfix"></span>
+                    <span id="loginError" class="error-msg"></span>
+                    <button id="loginBtn">Log In</button>
+                </form>
+                <span class="loginwith">Or Connect with</span>
+                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#"><i class="fa-brands fa-github"></i></a>
+                <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                <span class="back-link"><a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home</a></span>
+                <span class="copy">&copy; 2027</span>
             </div>
         </div>
-    </body>
+
+        <!-- ── FLIP FRONT ── -->
+        <div class="page front">
+            <div class="content">
+                <i class="fa-solid fa-user-plus userIcon"></i>
+                <h1>Hello, Friend!</h1>
+                <p>Enter your details and start your journey with us</p>
+                <button id="register">Register <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- ── FLIP BACK ── -->
+        <div class="page back">
+            <div class="content">
+                <i class="fa-solid fa-right-to-bracket bracketIcon"></i>
+                <h1>Welcome Back!</h1>
+                <p>To keep connected with us please login with your personal info</p>
+                <button id="login"><i class="fa-solid fa-arrow-left"></i> Log In</button>
+            </div>
+        </div>
+
+        <!-- ── REGISTER PANEL ── -->
+        <div class="register">
+            <div class="content">
+                <h1>Sign Up</h1>
+                <i class="fa-brands fa-facebook-f"></i>
+                <i class="fa-brands fa-twitter"></i>
+                <i class="fa-brands fa-github"></i>
+                <i class="fa-brands fa-linkedin-in"></i>
+                <span class="loginwith">Or</span>
+                <form onsubmit="return false;">
+                    <input type="text"     id="regName"     placeholder="Full Name *"/>
+                    <input type="email"    id="regEmail"    placeholder="Email *"/>
+                    <input type="password" id="regPassword" placeholder="Password * (min 6 chars)"/>
+                    <input type="tel"      id="regPhone"    placeholder="Phone (optional)"/>
+                    <span id="regError" class="error-msg"></span>
+                    <button id="registerBtn">Create Account</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
     <script src="loginscript.js"></script>
 </html>
