@@ -355,3 +355,178 @@ body { background:#f5f7fa; color:#333; line-height:1.6; }
     .hero-content h1 { font-size:2rem; }
     .footer-content { grid-template-columns:repeat(2,1fr); }
 }
+
+/* ══════════════════════════════════════
+   HEART / WISHLIST BUTTON
+══════════════════════════════════════ */
+.heart-btn {
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.92);
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    color: #ccc;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: all 0.25s;
+    z-index: 10;
+    backdrop-filter: blur(4px);
+}
+.heart-btn:hover { transform: scale(1.15); color: #ff6b6b; }
+.heart-btn.active { color: #ff6b6b; background: #fff0f0; }
+.heart-btn.active i { animation: heartPop 0.3s ease; }
+@keyframes heartPop {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.4); }
+    100% { transform: scale(1); }
+}
+
+/* Mobile heart button — slightly smaller */
+@media (max-width: 600px) {
+    .heart-btn { width: 28px; height: 28px; font-size: 0.82rem; top: 6px; right: 6px; }
+}
+
+/* ══════════════════════════════════════
+   PRODUCT DETAIL MODAL
+══════════════════════════════════════ */
+#productModal {
+    display: none;
+    position: fixed; inset: 0;
+    z-index: 2500;
+    align-items: flex-end;
+    justify-content: center;
+}
+#productModal.open { display: flex; }
+
+.pm-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(3px);
+}
+.pm-sheet {
+    position: relative;
+    background: white;
+    width: 100%; max-width: 560px;
+    max-height: 92vh;
+    border-radius: 24px 24px 0 0;
+    overflow-y: auto;
+    animation: sheetUp 0.35s cubic-bezier(.32,1,.23,1);
+    z-index: 1;
+}
+@keyframes sheetUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+}
+
+/* On desktop, center it like a dialog */
+@media (min-width: 601px) {
+    #productModal { align-items: center; }
+    .pm-sheet {
+        border-radius: 20px;
+        max-height: 88vh;
+        max-width: 520px;
+        animation: dialogIn 0.3s ease;
+    }
+    @keyframes dialogIn {
+        from { transform: scale(0.92); opacity: 0; }
+        to   { transform: scale(1);    opacity: 1; }
+    }
+}
+
+.pm-close {
+    position: absolute; top: 14px; right: 14px;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: rgba(0,0,0,0.12); border: none;
+    color: #444; font-size: 1rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10; transition: background 0.2s;
+}
+.pm-close:hover { background: rgba(0,0,0,0.22); }
+
+/* Gallery */
+.pm-gallery {
+    width: 100%; height: 280px;
+    background: #f7f7f7; overflow: hidden;
+    border-radius: 24px 24px 0 0;
+    position: relative;
+}
+@media (min-width: 601px) { .pm-gallery { height: 320px; border-radius: 20px 20px 0 0; } }
+
+.pm-main-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: opacity 0.25s;
+}
+.pm-no-img {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem; color: #ddd;
+}
+
+/* Thumbnails */
+.pm-thumbs {
+    display: flex; gap: 8px; padding: 10px 16px 0;
+    overflow-x: auto; scrollbar-width: none;
+}
+.pm-thumbs::-webkit-scrollbar { display: none; }
+.pm-thumb {
+    width: 58px; height: 58px; border-radius: 10px;
+    object-fit: cover; cursor: pointer; flex-shrink: 0;
+    border: 2.5px solid transparent;
+    transition: border-color 0.2s, opacity 0.2s;
+    opacity: 0.65;
+}
+.pm-thumb.active, .pm-thumb:hover { border-color: var(--primary); opacity: 1; }
+
+/* Body */
+.pm-body { padding: 16px 20px 28px; }
+.pm-cat {
+    font-size: 0.72rem; text-transform: uppercase;
+    font-weight: 700; color: var(--primary); margin-bottom: 4px;
+}
+.pm-name {
+    font-size: 1.25rem; color: var(--dark);
+    font-weight: 700; margin-bottom: 6px;
+}
+.pm-price {
+    font-size: 1.5rem; font-weight: 800;
+    color: var(--primary); margin-bottom: 6px;
+}
+.pm-seller {
+    font-size: 0.78rem; color: #888;
+    margin-bottom: 14px; display: flex; align-items: center; gap: 5px;
+}
+.pm-desc-label {
+    font-size: 0.78rem; font-weight: 700;
+    color: #aaa; text-transform: uppercase;
+    margin-bottom: 6px; letter-spacing: 0.5px;
+}
+.pm-desc {
+    font-size: 0.9rem; color: #555;
+    line-height: 1.65; margin-bottom: 20px;
+}
+.pm-actions {
+    display: flex; gap: 10px;
+}
+.pm-wishlist-btn, .pm-cart-btn {
+    flex: 1; padding: 13px 10px;
+    border-radius: 12px; border: none;
+    font-size: 0.92rem; font-weight: 700;
+    cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    gap: 7px; transition: all 0.2s; font-family: inherit;
+}
+.pm-wishlist-btn {
+    background: #fff0f0; color: var(--primary);
+    border: 2px solid #ffd6d6;
+}
+.pm-wishlist-btn:hover  { background: #ffe0e0; }
+.pm-wishlist-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+.pm-cart-btn {
+    background: var(--secondary); color: white;
+    flex: 2;
+}
+.pm-cart-btn:hover { background: #3dbdb4; }

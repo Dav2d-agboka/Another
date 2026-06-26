@@ -225,6 +225,29 @@
         .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
         @media (min-width:601px) { body { max-width:520px; margin:0 auto; } }
+
+        /* WISHLIST */
+        .wishlist-item {
+            display:flex; gap:12px; padding:10px 0;
+            border-bottom:1px solid #f5f5f5; align-items:center;
+        }
+        .wishlist-item:last-child { border-bottom:none; }
+        .wishlist-item img {
+            width:58px; height:58px; border-radius:10px;
+            object-fit:cover; background:#f0f0f0; flex-shrink:0;
+        }
+        .wishlist-item-info { flex:1; min-width:0; }
+        .wishlist-item-name  { font-weight:600; font-size:0.88rem; color:var(--dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .wishlist-item-cat   { font-size:0.72rem; color:var(--primary); margin:2px 0; }
+        .wishlist-item-price { font-size:0.9rem; font-weight:700; color:var(--dark); }
+        .rm-wishlist {
+            width:30px; height:30px; border-radius:50%;
+            background:#fff0f0; border:none; color:var(--primary);
+            cursor:pointer; display:flex; align-items:center; justify-content:center;
+            font-size:0.85rem; flex-shrink:0; transition:all 0.2s;
+        }
+        .rm-wishlist:hover { background:var(--primary); color:white; }
+
     </style>
 </head>
 <body>
@@ -336,6 +359,12 @@
         </div>
     </div>
 
+    <!-- Wishlist Section -->
+    <div class="section" id="wishlistSection">
+        <div class="section-title"><span><i class="fas fa-heart" style="color:var(--primary);"></i> My Wishlist</span></div>
+        <div id="wishlistItems"><div class="empty-state"><i class="fas fa-heart"></i><p>No wishlisted items yet.</p></div></div>
+    </div>
+
     <!-- Account actions -->
     <div class="section">
         <div class="section-title"><span><i class="fas fa-cog"></i> Account</span></div>
@@ -360,7 +389,7 @@
     <a href="index.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
     <a href="service.html" class="nav-item"><i class="fas fa-th-large"></i><span>Categories</span></a>
     <a href="index.html" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Cart</span></a>
-    <a href="#" class="nav-item"><i class="fas fa-heart"></i><span>Wishlist</span></a>
+    <a href="profile.html" class="nav-item"><i class="fas fa-heart"></i><span>Wishlist</span></a>
     <a href="profile.html" class="nav-item active"><i class="fas fa-user"></i><span>Account</span></a>
 </nav>
 
@@ -374,6 +403,7 @@ if (!loggedIn || !session) {
 } else {
     document.getElementById('profileContent').style.display = 'block';
     loadProfile();
+    renderWishlist();
 }
 
 function getUser() {
@@ -522,6 +552,62 @@ function logout() {
         showToast('Logged out. Goodbye!');
         setTimeout(() => window.location.href = 'login.html', 1000);
     }
+}
+
+
+// ── Wishlist ──
+function renderWishlist() {
+    const wishlistIds = JSON.parse(localStorage.getItem('swiftWishlist') || '[]');
+    const el = document.getElementById('wishlistItems');
+    if (!el) return;
+
+    // Pull all products (built-in + seller)
+    const builtIn = [
+        {id:1,name:"Perfume Set",category:"Beauty",price:89.99,image:"19.jpg"},
+        {id:2,name:"Nivea Set",category:"Beauty",price:89.99,image:"25.jpg"},
+        {id:3,name:"Nivea Sure",category:"Beauty",price:45.00,image:"27.jpg"},
+        {id:4,name:"Water Bottle",category:"Home & Kitchen",price:55.00,image:"28.jpg"},
+        {id:5,name:"Sport Watch",category:"Sports",price:430.00,image:"37.jpg"},
+        {id:6,name:"Marble Bottle",category:"Home & Kitchen",price:60.00,image:"39.jpg"},
+        {id:7,name:"Gaming Mouse",category:"Electronics",price:89.99,image:"42.jpg"},
+        {id:8,name:"Adidas Sneaker",category:"Sports",price:120.00,image:"44.jpg"},
+        {id:9,name:"NB Sneaker",category:"Fashion",price:150.00,image:"16.jpg"},
+        {id:10,name:"Smart Bottle",category:"Home & Kitchen",price:75.00,image:"28.jpg"},
+        {id:11,name:"Nivea Creme",category:"Beauty",price:35.00,image:"10.jpg"},
+        {id:12,name:"Smart Watch",category:"Electronics",price:350.00,image:"37.jpg"},
+    ];
+    const sellerProds = JSON.parse(localStorage.getItem('swiftAllProducts') || '[]');
+    const allProducts = [...builtIn, ...sellerProds];
+
+    const wishlisted = allProducts.filter(p => wishlistIds.includes(p.id));
+
+    // Update profile stats
+    const wishStatEl = document.querySelector('#statsRow .stat:nth-child(2) h4');
+    if (wishStatEl) wishStatEl.textContent = wishlisted.length;
+
+    if (!wishlisted.length) {
+        el.innerHTML = '<div class="empty-state"><i class="fas fa-heart"></i><p>No wishlisted items yet. Tap the ❤️ on any product!</p></div>';
+        return;
+    }
+    el.innerHTML = wishlisted.map(p => `
+        <div class="wishlist-item">
+            ${p.image ? `<img src="${p.image}" alt="${p.name}" onerror="this.style.display='none'">` : '<div style="width:58px;height:58px;background:#f0f0f0;border-radius:10px;"></div>'}
+            <div class="wishlist-item-info">
+                <div class="wishlist-item-name">${p.name}</div>
+                <div class="wishlist-item-cat">${p.category}</div>
+                <div class="wishlist-item-price">GH₵ ${parseFloat(p.price).toFixed(2)}</div>
+            </div>
+            <button class="rm-wishlist" onclick="removeWishlistItem(${p.id})" title="Remove"><i class="fas fa-heart-broken"></i></button>
+        </div>`).join('');
+}
+
+function removeWishlistItem(id) {
+    const list = JSON.parse(localStorage.getItem('swiftWishlist') || '[]');
+    const idx  = list.indexOf(id);
+    if (idx > -1) list.splice(idx, 1);
+    localStorage.setItem('swiftWishlist', JSON.stringify(list));
+    renderWishlist();
+    showToast('Removed from wishlist.');
 }
 
 // ── Toast ──
