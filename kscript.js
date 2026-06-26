@@ -41,6 +41,7 @@ function toggleWishlist(id) {
     if (idx > -1) list.splice(idx, 1);
     else list.push(id);
     saveWishlist(list);
+    updateWishlistBadge();
     return idx === -1; // true = now wishlisted
 }
 
@@ -67,6 +68,16 @@ function init() {
     updateNavForUser();
     injectPaystackScript();
     createProductModal();
+    setupWishlistPanel();
+    updateWishlistBadge();
+}
+
+
+function setupWishlistPanel() {
+    const closeBtn = document.getElementById('closeWishlist');
+    const overlay  = document.getElementById('wishlistOverlay');
+    if (closeBtn) closeBtn.addEventListener('click', closeWishlistPanel);
+    if (overlay)  overlay.addEventListener('click', closeWishlistPanel);
 }
 
 // ── Inject Paystack SDK ──
@@ -440,6 +451,86 @@ function startFlashTimer() {
         const s = String(secs % 60).padStart(2, '0');
         el.textContent = `${h}h : ${m}m : ${s}s`;
     }, 1000);
+}
+
+
+// ══════════════════════════════════════════════
+//  WISHLIST PANEL
+// ══════════════════════════════════════════════
+function openWishlistPanel() {
+    renderWishlistPanel();
+    document.getElementById('wishlistPanel').classList.add('active');
+    document.getElementById('wishlistOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+function closeWishlistPanel() {
+    document.getElementById('wishlistPanel').classList.remove('active');
+    document.getElementById('wishlistOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function renderWishlistPanel() {
+    const wishlistIds = getWishlist();
+    const allProducts = getAllProducts();
+    const items = allProducts.filter(p => wishlistIds.includes(p.id));
+    const el = document.getElementById('wishlistItemsList');
+
+    // Update badge
+    updateWishlistBadge();
+
+    if (!items.length) {
+        el.innerHTML = `<div class="cart-empty">
+            <i class="fas fa-heart" style="color:#ffcdd2;"></i>
+            <p>Your wishlist is empty</p>
+            <p style="font-size:0.8rem;color:#bbb;margin-top:4px;">Tap the ❤️ on any product to save it here</p>
+        </div>`;
+        return;
+    }
+
+    el.innerHTML = items.map(p => `
+        <div class="wl-item" id="wl-${p.id}">
+            <img class="wl-item-img" src="${p.image || ''}" alt="${p.name}"
+                 onerror="this.style.background='#f0f0f0';this.src='';">
+            <div class="wl-item-info">
+                <div class="wl-item-cat">${p.category}</div>
+                <div class="wl-item-name">${p.name}</div>
+                <div class="wl-item-price">GH₵ ${parseFloat(p.price).toFixed(2)}</div>
+            </div>
+            <div class="wl-item-btns">
+                <button class="wl-add-cart" onclick="addToCartFromWishlist(${p.id})">
+                    <i class="fas fa-cart-plus"></i> Cart
+                </button>
+                <button class="wl-remove" onclick="removeFromWishlistPanel(${p.id})">
+                    <i class="fas fa-heart-broken"></i> Remove
+                </button>
+            </div>
+        </div>`).join('');
+}
+
+function addToCartFromWishlist(id) {
+    addToCart(id);
+    // Don't close — let user keep browsing wishlist
+}
+
+function removeFromWishlistPanel(id) {
+    toggleWishlist(id); // toggles off since it's already in
+    updateAllHearts();
+    // Remove the row with animation
+    const row = document.getElementById('wl-' + id);
+    if (row) {
+        row.style.transition = 'opacity 0.25s, transform 0.25s';
+        row.style.opacity = '0';
+        row.style.transform = 'translateX(40px)';
+        setTimeout(() => renderWishlistPanel(), 260);
+    }
+}
+
+function updateWishlistBadge() {
+    const count = getWishlist().length;
+    const badge = document.getElementById('wishlistBadge');
+    if (!badge) return;
+    if (count > 0) { badge.textContent = count; badge.style.display = 'flex'; }
+    else { badge.style.display = 'none'; }
 }
 
 document.addEventListener('DOMContentLoaded', init);
