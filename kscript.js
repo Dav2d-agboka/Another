@@ -1,4 +1,13 @@
-const SWIFT_FEE = 0.05;
+/* ══════════════════════════════════════════════════════════════
+   D-SWIFT  |  kscript.js
+   - Merges built-in + seller products
+   - Cart logic
+   - Paystack checkout with 5% Swift fee display
+   ══════════════════════════════════════════════════════════════ */
+
+const SWIFT_FEE        = 0.05;
+// ⚠️  Replace with your real Paystack PUBLIC key from paystack.com → Settings → API Keys
+const PAYSTACK_PUB_KEY = 'pk_test_5c141c098cbdf209fcb1258ce762861f7573f8f7';
 
 // ── Built-in products ──
 const builtInProducts = [
@@ -16,13 +25,12 @@ const builtInProducts = [
     { id: 12, name: "Smart Watch",     category: "Electronics",    price: 350.00, image: "37.jpg",  sellerId: null },
 ];
 
-// Merge built-in + seller products
 function getAllProducts() {
     const sellerProducts = JSON.parse(localStorage.getItem('swiftAllProducts') || '[]');
     return [...builtInProducts, ...sellerProducts];
 }
 
-// DOM Elements
+// ── DOM Elements ──
 const productsGrid   = document.getElementById('productsGrid');
 const cartIcon       = document.getElementById('cartIcon');
 const mobileCartIcon = document.getElementById('mobileCartIcon');
@@ -32,6 +40,7 @@ const closeCart      = document.getElementById('closeCart');
 const overlay        = document.getElementById('overlay');
 const cartItemsEl    = document.getElementById('cartItems');
 const cartTotalEl    = document.getElementById('cartTotal');
+const checkoutBtn    = document.querySelector('.checkout-btn');
 
 let cart = [];
 let currentCategory = 'all';
@@ -42,6 +51,17 @@ function init() {
     startBannerSlider();
     startFlashTimer();
     updateNavForUser();
+    injectPaystackScript();
+}
+
+// ── Inject Paystack SDK ──
+function injectPaystackScript() {
+    if (document.getElementById('paystackScript')) return;
+    const s  = document.createElement('script');
+    s.id     = 'paystackScript';
+    s.src    = 'https://js.paystack.co/v1/inline.js';
+    s.async  = true;
+    document.head.appendChild(s);
 }
 
 // ── Render products ──
@@ -58,7 +78,7 @@ function renderProducts(cat = 'all') {
         card.innerHTML = `
             <div class="product-image">
                 <img src="${product.image}" alt="${product.name}" loading="lazy"
-                     onerror="this.style.background='#f0f0f0';this.style.display='none'">
+                     onerror="this.style.background='#f0f0f0';this.src='';this.style.display='flex';this.style.alignItems='center';this.style.justifyContent='center';">
             </div>
             <div class="product-info">
                 <div class="product-category">${product.category}</div>
@@ -78,8 +98,8 @@ function setupEventListeners() {
     [cartIcon, mobileCartIcon, mobCartBtn].forEach(el => {
         if (el) el.addEventListener('click', openCart);
     });
-    closeCart.addEventListener('click', closeCartFn);
-    overlay.addEventListener('click', closeCartFn);
+    if (closeCart) closeCart.addEventListener('click', closeCartFn);
+    if (overlay)   overlay.addEventListener('click', closeCartFn);
 
     document.addEventListener('click', e => {
         if (e.target.classList.contains('add-to-cart')) {
@@ -97,6 +117,8 @@ function setupEventListeners() {
             renderProducts(currentCategory);
         });
     });
+
+    if (checkoutBtn) checkoutBtn.addEventListener('click', handleCheckout);
 }
 
 function openCart()    { cartContainer.classList.add('active');    overlay.classList.add('active'); }
@@ -125,6 +147,10 @@ function updateQuantity(id, change) {
 }
 
 function updateCart() {
+    const subtotal  = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+    const swiftFee  = subtotal * SWIFT_FEE;
+    const total     = subtotal;   // buyer pays subtotal; 5% is taken from seller's cut
+
     if (cart.length === 0) {
         cartItemsEl.innerHTML = `<div class="cart-empty"><i class="fas fa-shopping-cart"></i><p>Your cart is empty</p></div>`;
     } else {
@@ -146,20 +172,23 @@ function updateCart() {
                 </div>`;
             cartItemsEl.appendChild(el);
         });
+
         document.querySelectorAll('.quantity-btn.minus').forEach(btn =>
             btn.addEventListener('click', e => updateQuantity(parseInt(e.currentTarget.getAttribute('data-id')), -1)));
         document.querySelectorAll('.quantity-btn.plus').forEach(btn =>
             btn.addEventListener('click', e => updateQuantity(parseInt(e.currentTarget.getAttribute('data-id')), 1)));
     }
 
-    const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-    cartTotalEl.textContent = `GH₵ ${total.toFixed(2)}`;
+    // Update total display — show subtotal (buyer pays this)
+    if (cartTotalEl) cartTotalEl.textContent = `GH₵ ${total.toFixed(2)}`;
+
+    // Update cart count badges
     const count = cart.reduce((s, i) => s + i.quantity, 0);
     document.querySelectorAll('.cart-count').forEach(el => el.textContent = count);
 }
 
-// ── Checkout — records sale to seller ──
-document.querySelector('.checkout-btn').addEventListener('click', function() {
+// ── Checkout with Paystack ──
+function handleCheckout() {
     if (cart.length === 0) return;
 
     const loggedIn = localStorage.getItem('swiftLoggedIn') === 'true';
@@ -169,10 +198,52 @@ document.querySelector('.checkout-btn').addEventListener('click', function() {
         return;
     }
 
+    const user = JSON.parse(localStorage.getItem('swiftCurrentUser') || 'null');
+    if (!user) {
+        showNotification('Session expired. Please login again.');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const total       = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+    const totalKobo   = Math.round(total * 100); // Paystack uses smallest currency unit (pesewas for GHS)
+
+    // Check Paystack is loaded
+    if (typeof PaystackPop === 'undefined') {
+        showNotification('Payment system loading… please try again.');
+        return;
+    }
+
+    const handler = PaystackPop.setup({
+        key:       PAYSTACK_PUB_KEY,
+        email:     user.email,
+        amount:    totalKobo,          // in pesewas (Ghana Cedis × 100)
+        currency:  'GHS',
+        ref:       'DSWIFT-' + Date.now(),
+        metadata: {
+            custom_fields: [
+                { display_name: 'Customer Name', variable_name: 'customer_name', value: user.name },
+                { display_name: 'Items',         variable_name: 'items',         value: cart.map(i => `${i.name} x${i.quantity}`).join(', ') }
+            ]
+        },
+        callback: function(response) {
+            // Payment successful
+            onPaymentSuccess(response, user, total);
+        },
+        onClose: function() {
+            showNotification('Payment cancelled.');
+        }
+    });
+
+    handler.openIframe();
+}
+
+function onPaymentSuccess(response, user, total) {
+    // 1. Credit sellers (deduct 5% Swift fee from their earnings)
     const users = JSON.parse(localStorage.getItem('swiftUsers') || '[]');
 
     cart.forEach(item => {
-        if (!item.sellerId) return; // built-in product, no seller to credit
+        if (!item.sellerId) return;
         const sellerIdx = users.findIndex(u => u.id === item.sellerId);
         if (sellerIdx === -1) return;
 
@@ -185,38 +256,36 @@ document.querySelector('.checkout-btn').addEventListener('click', function() {
             productName: item.name,
             qty:   item.quantity,
             gross: gross,
+            fee:   fee,
             net:   net,
-            date:  new Date().toLocaleDateString()
+            date:  new Date().toLocaleDateString(),
+            ref:   response.reference
         });
         users[sellerIdx].totalEarnings = (users[sellerIdx].totalEarnings || 0) + net;
     });
 
-    localStorage.setItem('swiftUsers', JSON.stringify(users));
-
-    // Save order to buyer's history
-    const currentUser = JSON.parse(localStorage.getItem('swiftCurrentUser') || 'null');
-    if (currentUser) {
-        const allUsers = JSON.parse(localStorage.getItem('swiftUsers') || '[]');
-        const buyerIdx = allUsers.findIndex(u => u.id === currentUser.id);
-        if (buyerIdx > -1) {
-            if (!allUsers[buyerIdx].orders) allUsers[buyerIdx].orders = [];
-            allUsers[buyerIdx].orders.push({
-                id:    Date.now(),
-                items: cart.map(i => ({ name: i.name, qty: i.quantity, price: i.price })),
-                total: cart.reduce((s, i) => s + i.price * i.quantity, 0),
-                date:  new Date().toLocaleDateString(),
-                status: 'Processing'
-            });
-            localStorage.setItem('swiftUsers', JSON.stringify(allUsers));
-            localStorage.setItem('swiftCurrentUser', JSON.stringify(allUsers[buyerIdx]));
-        }
+    // 2. Save order to buyer's history
+    const buyerIdx = users.findIndex(u => u.id === user.id);
+    if (buyerIdx > -1) {
+        if (!users[buyerIdx].orders) users[buyerIdx].orders = [];
+        users[buyerIdx].orders.push({
+            id:     Date.now(),
+            ref:    response.reference,
+            items:  cart.map(i => ({ name: i.name, qty: i.quantity, price: i.price })),
+            total:  total,
+            date:   new Date().toLocaleDateString(),
+            status: 'Paid ✓'
+        });
+        localStorage.setItem('swiftCurrentUser', JSON.stringify(users[buyerIdx]));
     }
 
-    showNotification('Order placed successfully! 🎉');
+    localStorage.setItem('swiftUsers', JSON.stringify(users));
+
+    showNotification('Payment successful! Order confirmed 🎉');
     cart = [];
     updateCart();
     closeCartFn();
-});
+}
 
 // ── Update nav based on login state ──
 function updateNavForUser() {
@@ -224,31 +293,29 @@ function updateNavForUser() {
     const u        = JSON.parse(localStorage.getItem('swiftCurrentUser') || 'null');
     if (!loggedIn || !u) return;
 
-    // Desktop nav — change Login to user's name
     const loginLink = document.querySelector('.nav-links a[href="login.html"]');
     if (loginLink) {
-        loginLink.href = u.role === 'seller' ? 'seller.html' : 'profile.html';
+        loginLink.href      = u.role === 'seller' ? 'seller.html' : 'profile.html';
         loginLink.innerHTML = `<i class="fas fa-user-circle"></i> ${u.name.split(' ')[0]}`;
     }
 
-    // Mobile account tab
     const mobAcc = document.querySelector('.mobile-bottom-nav a[href="profile.html"], .mobile-bottom-nav a[href="login.html"]');
     if (mobAcc) mobAcc.href = u.role === 'seller' ? 'seller.html' : 'profile.html';
 }
 
-// ── Notification ──
+// ── Notification toast ──
 function showNotification(msg) {
     const n = document.createElement('div');
     n.textContent = msg;
     n.style.cssText = `position:fixed;bottom:80px;right:16px;background:var(--primary);color:white;
         padding:12px 20px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);
-        z-index:2000;transform:translateY(60px);opacity:0;transition:all 0.3s;font-size:0.85rem;`;
+        z-index:2000;transform:translateY(60px);opacity:0;transition:all 0.3s;font-size:0.85rem;max-width:280px;`;
     document.body.appendChild(n);
     setTimeout(() => { n.style.transform = 'translateY(0)'; n.style.opacity = '1'; }, 10);
     setTimeout(() => {
         n.style.transform = 'translateY(60px)'; n.style.opacity = '0';
         setTimeout(() => document.body.removeChild(n), 300);
-    }, 2500);
+    }, 3000);
 }
 
 // ── Banner slider ──
@@ -259,10 +326,10 @@ function startBannerSlider() {
     let current = 0;
     function goTo(i) {
         slides[current].classList.remove('active');
-        dots[current].classList.remove('active');
+        dots[current] && dots[current].classList.remove('active');
         current = i % slides.length;
         slides[current].classList.add('active');
-        dots[current].classList.add('active');
+        dots[current] && dots[current].classList.add('active');
     }
     dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
     setInterval(() => goTo(current + 1), 3500);
